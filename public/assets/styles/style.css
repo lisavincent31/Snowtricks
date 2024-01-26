@@ -1,0 +1,50 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Homepage Styles */
+#homepage {
+    width: 100%;
+}
+
+#homepage h1,
+#homepage p {
+    background-color: transparent;
+    opacity: 1;
+    color: #fff;
+}
+
+#homepage .bg-img {
+    position: relative;
+    opacity: 0.65;
+    background-image: url('/assets/images/homepage.jpg');
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#homepage .bg-img .caption {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    background-color: #1a1a1a;
+    opacity: 0.85;
+}
+
+#homepage .btn-links {
+    font-size: 1.875rem;
+}
+
+@media screen and (min-width: 200px) and (max-width: 640px) {
+    nav.navbar, .container footer {
+        display: none!important;
+    }
+}
