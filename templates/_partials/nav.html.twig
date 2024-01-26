@@ -48,4 +48,35 @@
             </div><!-- #End Hamburger Menu -->
         </div>
     </nav>
+    <nav class="navbar navbar-dark fixed-bottom bg-primary">
+        <div class="go-top-btn d-none">
+            <a href="#homepage" type="button" class="btn rounded-circle btn-links">
+                <i class="bi bi-arrow-up-circle-fill"></i>
+            </a>
+        </div>
+        <div class="go-bottom-btn">
+            <a href="#tricks_container" type="button" class="btn rounded-circle btn-links">
+                <i class="bi bi-arrow-down-circle-fill"></i>
+            </a>
+        </div>
+        <div class="container">
+            <ul class="navbar-nav me-auto w-100 flex-row justify-content-between">
+                <li class="nav-item m-0 p-2">
+                    <a href="/" class="nav-link"><i class="bi bi-house-fill"></i></a>
+                </li>
+                <li class="nav-item m-0 p-2">
+                    <a href="/" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
+                </li>
+                {% if (app.user) %}
+                <li class="nav-item m-0 p-2">
+                    <a href="/" class="nav-link"><i class="bi bi-box-arrow-left"></i></a>
+                </li>
+                {% else %}
+                <li class="nav-item m-0 p-2">
+                    <a href="/" class="nav-link"><i class="bi bi-box-arrow-in-right"></i></a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 </header>

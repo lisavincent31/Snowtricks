@@ -13,12 +13,6 @@
                     <p>Découvrez, créez, partagez du contenu sur des figures de snowboard.</p>
                 </div>
             </div>
-            <!-- Button go to tricks container -->
-            <div class="container-fluid position-absolute bottom-0">
-                <a href="/#tricks_container" type="button" class="btn float-end rounded-circle btn-links">
-                    <i class="bi bi-arrow-down-circle-fill text-primary"></i>
-                </a>
-            </div><!-- #End Button go to tricks container -->
         </div><!-- #End Fullpage image -->
 
         <!-- Tricks Container -->
@@ -42,9 +36,14 @@
                 
             </div>
         </div><!-- #End Tricks Container -->
-        <div class="float-end">
-            <a href="#homepage" type="button" class="btn rounded-circle btn-links">
+        <div class="fixed-bottom desktop-btn d-none" id="go-top">
+            <a href="#homepage" type="button" class="btn rounded-circle float-end btn-links">
                 <i class="bi bi-arrow-up-circle-fill text-primary"></i>
+            </a>
+        </div>
+        <div class="fixed-bottom desktop-btn" id="go-bottom">
+            <a href="#tricks_container" type="button" class="btn rounded-circle float-end btn-links">
+                <i class="bi bi-arrow-down-circle-fill text-primary"></i>
             </a>
         </div>
     </div><!-- #End Homepage -->

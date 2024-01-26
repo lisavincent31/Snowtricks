@@ -5,6 +5,10 @@ body {
     box-sizing: border-box;
 }
 
+.btn-links {
+    font-size: 1.875rem;
+}
+
 /* Homepage Styles */
 #homepage {
     width: 100%;
@@ -39,12 +43,48 @@ body {
     opacity: 0.85;
 }
 
-#homepage .btn-links {
-    font-size: 1.875rem;
+header .navbar.fixed-bottom {
+    display: none;
+}
+
+#go-top,
+#go-bottom {
+    width: fit-content;
 }
 
 @media screen and (min-width: 200px) and (max-width: 640px) {
-    nav.navbar, .container footer {
+    /* General Styles */
+    header .navbar.fixed-top, footer, .desktop-btn {
         display: none!important;
     }
+    header .navbar.fixed-bottom {
+        display: block;
+    }
+    .nav-link {
+        font-size: 1.875rem;
+    }
+    .go-top-btn,
+    .go-bottom-btn {
+        position: absolute;
+        bottom: 100px;
+        right: 10px;
+    }
+    .go-top-btn .btn, .go-top-btn .btn:hover,
+    .go-bottom-btn .btn, .go-bottom-btn .btn:hover {
+        --bs-btn-color : white;
+        --bs-btn-hover-color : white;
+        --bs-btn-bg : #1a1a1a;
+        --bs-btn-hover-bg : #1a1a1a;
+        padding: .5rem;
+    }
+    /* Homepage Styles */
+    #homepage, #homepage .bg-img {
+        height: calc(100vh - 132px);
+    }
+
+    #tricks_container {
+        height: 100vh;
+        padding-bottom: 200px;
+    }
+
 }
