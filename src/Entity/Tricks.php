@@ -30,7 +30,7 @@ class Tricks
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $author = null;
+    private ?Users $author = null;
 
     #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: Comments::class)]
     private Collection $comments;
@@ -103,12 +103,12 @@ class Tricks
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?Users
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): static
+    public function setAuthor(?Users $author): static
     {
         $this->author = $author;
 
