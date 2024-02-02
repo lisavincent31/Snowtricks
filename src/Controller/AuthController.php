@@ -10,26 +10,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\UsersType;
 use App\Entity\Users;
 
 class AuthController extends AbstractController
 {
-    // Return the login view
-    #[Route('/login', name: 'app_login')]
-    public function index(): Response
-    {
-        return $this->render('auth/login.html.twig');
-    }
-
     // Return the register view
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, 
-                            EntityManagerInterface $entityManager, 
-                            SluggerInterface $slugger,
-                            UserPasswordHasherInterface $passwordHasher
-                            ): Response
+    public function register(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, UserPasswordHasherInterface $passwordHasher): Response
     {
         // create a user instance
         $user = new Users();
@@ -76,4 +66,5 @@ class AuthController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }
