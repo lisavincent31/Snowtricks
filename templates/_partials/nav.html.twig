@@ -27,12 +27,12 @@
                     <!-- Logged_in_user menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle px-3" href="#" id="compte" data-bs-toggle="dropdown" aria-expanded="true">
+                            <img src="assets/medias/avatars/{{ app.user.avatar }}" class="avatar pl-2 rounded-circle">
                             {{ app.user.username }}
-                            <img src="https://picsum.photos/id/256/25/25" class="pl-2 rounded-circle">
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="compte" data-bs-popper="none">
                             <li><a class="dropdown-item" href="#create_trick">Créer un trick</a></li>
-                            <li><a class="dropdown-item" href="#logout">Déconnexion</a></li>
+                            <li><a class="dropdown-item" href="logout">Déconnexion</a></li>
                         </ul>
                     </li><!-- #End Logged_in_user menu -->
                     {% else %}
@@ -65,15 +65,15 @@
                     <a href="/" class="nav-link"><i class="bi bi-house-fill"></i></a>
                 </li>
                 <li class="nav-item m-0 p-2">
-                    <a href="/" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
+                    <a href="/tricks" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
                 </li>
                 {% if (app.user) %}
                 <li class="nav-item m-0 p-2">
-                    <a href="/" class="nav-link"><i class="bi bi-box-arrow-left"></i></a>
+                    <a href="/logout" class="nav-link"><i class="bi bi-box-arrow-left"></i></a>
                 </li>
                 {% else %}
                 <li class="nav-item m-0 p-2">
-                    <a href="/" class="nav-link"><i class="bi bi-box-arrow-in-right"></i></a>
+                    <a href="/login" class="nav-link"><i class="bi bi-box-arrow-in-right"></i></a>
                 </li>
                 {% endif %}
             </ul>

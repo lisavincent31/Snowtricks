@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -215,5 +218,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addPropertyConstraint('username', new NotBlank());
+        $metadata->addPropertyConstraint('email', new Assert\Email([
+            'message' => 'L\'email "{{ value }}" n\'est pas valide.'
+        ]));
+        $metadata->addPropertyConstraint('password', new Assert\Length([
+            'min' => 6,
+            'minMessage' => 'Votre mot de passe doit contenir au minimum 6 caractères.'
+        ]));
     }
 }

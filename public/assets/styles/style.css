@@ -5,6 +5,10 @@ body {
     box-sizing: border-box;
 }
 
+.margin-desktop {
+    height: 100px;
+}
+
 .btn-links {
     font-size: 1.875rem;
 }
@@ -47,6 +51,13 @@ header .navbar.fixed-bottom {
     display: none;
 }
 
+img.avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    object-position: top;
+}
+
 #go-top,
 #go-bottom {
     width: fit-content;
@@ -54,6 +65,9 @@ header .navbar.fixed-bottom {
 
 @media screen and (min-width: 200px) and (max-width: 640px) {
     /* General Styles */
+    .margin-desktop {
+        height: 0;
+    }
     header .navbar.fixed-top, footer, .desktop-btn {
         display: none!important;
     }
