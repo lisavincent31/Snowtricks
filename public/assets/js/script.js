@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    /**
+     * Show or Hide buttons go-to-top on SCROLL
+     */
     var scrollDistance = $(window).scrollTop();
     if(scrollDistance > 100) {
         $('#go-top').removeClass('d-none');
@@ -16,6 +19,9 @@ $(document).ready(function() {
         $('.go-top-btn').addClass('d-none');
     }
 });
+/**
+ * SCROLL FUNCTION
+ */
 $(window).scroll(function() {
     var scrollDistance = $(window).scrollTop();
     if(scrollDistance > 100) {

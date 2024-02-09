@@ -20,9 +20,9 @@ class Medias
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'medias')]
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Tricks", inversedBy: 'medias', cascade:['persist'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Tricks $trick_id = null;
+    private ?Tricks $trick = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -59,14 +59,14 @@ class Medias
         return $this;
     }
 
-    public function getTrickId(): ?Tricks
+    public function getTrick(): ?Tricks
     {
-        return $this->trick_id;
+        return $this->trick;
     }
 
-    public function setTrickId(?Tricks $trick_id): static
+    public function setTrick(?Tricks $trick): static
     {
-        $this->trick_id = $trick_id;
+        $this->trick = $trick;
 
         return $this;
     }

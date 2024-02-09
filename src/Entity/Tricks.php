@@ -25,15 +25,15 @@ class Tricks
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\OneToOne(inversedBy: 'tricks')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(inversedBy: 'tricks', cascade:['persist'])]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Medias $featuredImage = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $author = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: Comments::class)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comments::class, cascade:['persist'])]
     private Collection $comments;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -42,7 +42,7 @@ class Tricks
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: Medias::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Medias::class, orphanRemoval: true, cascade:['persist'])]
     private Collection $medias;
 
     #[ORM\Column(length: 255)]
@@ -102,8 +102,8 @@ class Tricks
 
     public function setFeaturedImage(?Medias $featuredImage): static
     {
-        $this->featuredImage = $featuredImage;
-
+            $this->featuredImage = $featuredImage;
+            $featuredImage->setTrick($this);
         return $this;
     }
 
@@ -131,7 +131,7 @@ class Tricks
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
-            $comment->setTrickId($this);
+            $comment->setTrick($this);
         }
 
         return $this;
@@ -141,8 +141,8 @@ class Tricks
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getTrickId() === $this) {
-                $comment->setTrickId(null);
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
             }
         }
 
@@ -174,7 +174,7 @@ class Tricks
     }
 
     /**
-     * @return Collection<int, Medias>
+     * @return Collection<array, Medias[]>
      */
     public function getMedias(): Collection
     {
@@ -184,8 +184,8 @@ class Tricks
     public function addMedia(Medias $media): static
     {
         if (!$this->medias->contains($media)) {
-            $this->medias->add($media);
-            $media->setTrickId($this);
+            $this->medias[] = $media;
+            $media->setTrick($this);
         }
 
         return $this;
@@ -193,10 +193,12 @@ class Tricks
 
     public function removeMedia(Medias $media): static
     {
-        if ($this->medias->removeElement($media)) {
-            // set the owning side to null (unless already changed)
-            if ($media->getTrickId() === $this) {
-                $media->setTrickId(null);
+        if($this->medias->contains($image)) {
+            if ($this->medias->removeElement($media)) {
+                // set the owning side to null (unless already changed)
+                if ($media->getTrick() === $this) {
+                    $media->setTrick(null);
+                }
             }
         }
 

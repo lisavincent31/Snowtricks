@@ -8,44 +8,33 @@
         {% if error|default(null) %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
+        <div class="container mt-4 vh-100">
+    <div class="row">
         <div class="col-md-8 shadow mt-4 mx-auto p-4">
-            <form method="post" class="row g-3">
-                <h1 class="h3 mb-3 font-weight-normal">Créer une nouvelle figure</h1>
-                <div class="row align-items-center">
-                    <div class="col-md-6 mb-3">
-                        <label for="name">Nom *</label>
-                        <input type="text" name="name" id="name" class="form-control" placeholder="Nom *" required autofocus>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="category">Catégorie *</label>
-                        <select name="category" id="category" class="form-control" required>
-                            <option value="grab">Grab</option>
-                            <option value="rotation">Rotation</option>
-                            <option value="flip">Flip</option>
-                            <option value="slide">Slide</option>
-                        </select>
-                    </div>
+            {{ form_start(form) }}
+                <h1 class="h3 mb-3 font-weight-normal">Create a new trick</h1>
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.name, { 'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.name) }}
                 </div>
-                <div class="mb-3">
-                    <label for="content">Description *</label>
-                    <textarea name="content" id="content" class="form-control"></textarea>
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.category, { 'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.category) }}
                 </div>
-                <div class="mb-3">
-                    <label for="featured_image">Image à la une *</label>
-                    <input type="file" name="featured_image" id="featured_image" class="form-control-file">
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.content, { 'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.content) }}
                 </div>
-                <div class="mb-3">
-                    <label for="medias">Ajouter d'autres médias</label>
-                    <input type="file" name="medias[]" id="medias" multiple accept="image/*,video/*">
-                    <button class="btn btn-outline-primary col-3" type="submit">+</button>
+                <div class="mb-3 form-control-file">
+                    {{ form_label(form.medias) }}
+                    {{ form_widget(form.medias, { 'attr': {'class': 'form-control'}}) }}
                 </div>
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                <button class="btn btn-outline-primary col-3" type="submit">
-                    Valider
-                </button>
-            </form>
+                {{ form_rest(form) }}
+                <button type="submit" class="btn btn-outline-primary">Créer mon compte</button>
+            {{ form_end(form) }}
         </div>
+    </div>
+</div>
     </div>
 </div>
 {% endblock %}
