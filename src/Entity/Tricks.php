@@ -25,8 +25,9 @@ class Tricks
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $featuredImage = null;
+    #[ORM\OneToOne(inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Medias $featuredImage = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -94,12 +95,12 @@ class Tricks
         return $this;
     }
 
-    public function getFeaturedImage(): ?string
+    public function getFeaturedImage(): ?Medias
     {
         return $this->featuredImage;
     }
 
-    public function setFeaturedImage(string $featuredImage): static
+    public function setFeaturedImage(?Medias $featuredImage): static
     {
         $this->featuredImage = $featuredImage;
 
