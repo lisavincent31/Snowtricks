@@ -9,20 +9,20 @@
             {{ form_start(form) }}
                 <h1 class="h3 mb-3 font-weight-normal">Inscription</h1>
                 <div class="form-floating mb-3">
-                    {{ form_widget(form.username) }}
+                    {{ form_widget(form.username, { 'attr': {'class': 'form-control'}}) }}
                     {{ form_label(form.username) }}
                 </div>
                 <div class="form-floating mb-3">
-                    {{ form_widget(form.email) }}
+                    {{ form_widget(form.email, { 'attr': {'class': 'form-control'}}) }}
                     {{ form_label(form.email) }}
                 </div>
                 <div class="form-floating mb-3">
-                    {{ form_widget(form.password) }}
+                    {{ form_widget(form.password, { 'attr': {'class': 'form-control'}}) }}
                     {{ form_label(form.password) }}
                 </div>
                 <div class="mb-3 form-control-file">
                     {{ form_label(form.avatar) }}
-                    {{ form_widget(form.avatar) }}
+                    {{ form_widget(form.avatar, { 'attr': {'class': 'form-control'}}) }}
                 </div>
                 {{ form_rest(form) }}
                 <button type="submit" class="btn btn-outline-primary">Créer mon compte</button>

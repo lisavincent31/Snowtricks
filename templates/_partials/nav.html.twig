@@ -27,12 +27,12 @@
                     <!-- Logged_in_user menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle px-3" href="#" id="compte" data-bs-toggle="dropdown" aria-expanded="true">
-                            <img src="assets/medias/avatars/{{ app.user.avatar }}" class="avatar pl-2 rounded-circle">
+                            <img src="/assets/medias/avatars/{{ app.user.avatar }}" class="avatar pl-2 rounded-circle">
                             {{ app.user.username }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="compte" data-bs-popper="none">
-                            <li><a class="dropdown-item" href="#create_trick">Créer un trick</a></li>
-                            <li><a class="dropdown-item" href="logout">Déconnexion</a></li>
+                            <li><a class="dropdown-item" href="/trick/new">Créer un trick</a></li>
+                            <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
                         </ul>
                     </li><!-- #End Logged_in_user menu -->
                     {% else %}

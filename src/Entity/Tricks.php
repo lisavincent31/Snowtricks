@@ -44,6 +44,9 @@ class Tricks
     #[ORM\OneToMany(mappedBy: 'trick_id', targetEntity: Medias::class, orphanRemoval: true)]
     private Collection $medias;
 
+    #[ORM\Column(length: 255)]
+    private ?string $category = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -195,6 +198,18 @@ class Tricks
                 $media->setTrickId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

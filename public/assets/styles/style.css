@@ -18,8 +18,8 @@ body {
     width: 100%;
 }
 
-#homepage h1,
-#homepage p {
+#homepage .caption h1,
+#homepage .caption p {
     background-color: transparent;
     opacity: 1;
     color: #fff;

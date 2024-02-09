@@ -55,18 +55,19 @@ class AuthController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    dd($e);
-                    $error = 'Une erreur s\'est produite lors de l\'enregistrement de l\'image.';
+                    $errorsString = (string) $e;
+
+                    // return the view
+                    return $this->render('auth/register.html.twig', [
+                        'form' => $form->createView(),
+                        'errors' => $errorsString
+                    ]);;
                 }
                 $user->setAvatar($newFilename);
 
                 // hash password before save
                 $plainPassword = $form->get('password')->getData();
                 $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                if(!$hashedPassword) {
-                    dd('Un problème est arrivé lors du hash du mot de passe.');
-                    $error = 'Un problème est arrivé lors du hash du mot de passe.';
-                }
                 $user->setPassword($hashedPassword);
                 // set is_verified to false
                 $user->setIsVerified(false);
