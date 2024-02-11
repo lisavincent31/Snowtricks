@@ -1,16 +1,31 @@
 $(document).ready(function() {
-    // Event Listener onclick to the add-media button
-    $('button.add-media').on('click', () => {
+    // Event Listener onclick to the add-video button
+    $('button.add-video').on('click', () => {
         // create a new input type file for medias[]
-        $('#medias').append(`
+        $('.videos').append(`
         <div class="d-flex justify-content-between">
-            <input type="file" name="medias[]" class="form-control" accept="image/*,video/*">
-            <button type="button" class="btn btn-white remove-media">Supprimer cette image</button>
+            <input type="text" name="videos[]" class="form-control mt-2">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-video m-2">Retirer</button>
         </div>`);
     });
 
-     // Add click event listener to dynamically remove an input for medias[]
-     $('#medias').on('click', '.remove-media', function() {
+    // Event Listener onclick to the add-image button
+    $('button.add-image').on('click', () => {
+        // create a new input type file for medias[]
+        $('.images').append(`
+        <div class="d-flex justify-content-between">
+            <input type="file" name="images[]" class="form-control mt-2" accept="image/*">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-image m-2">Retirer</button>
+        </div>`);
+    });
+
+    // Remove the added video input
+    $('.videos').on('click', '.remove-video', function() {
+        $(this).closest('.d-flex').remove();
+    });
+
+    // Remove the added image input
+    $('.images').on('click', '.remove-image', function() {
         $(this).closest('.d-flex').remove();
     });
 });

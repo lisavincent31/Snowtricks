@@ -12,47 +12,57 @@
     <div class="row">
         <div class="col-md-8 shadow mt-4 mx-auto p-4">
             {{ form_start(form) }}
-                <h1 class="h3 mb-3 font-weight-normal">Create a new trick</h1>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.name, { 'attr': {'class': 'form-control'}}) }}
-                            {{ form_label(form.name) }}
+                <h1 class="h3 mb-3 font-weight-normal">Créer une nouvelle figure</h1>
+                <fieldset class="mb-4">
+                    <legend>Informations :</legend>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.name, { 'attr': {'class': 'form-control'}}) }}
+                                {{ form_label(form.name) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.category, { 'attr': {'class': 'form-control'}}) }}
+                                {{ form_label(form.category) }}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.category, { 'attr': {'class': 'form-control'}}) }}
-                            {{ form_label(form.category) }}
+                    <div class="form-floating mb-3">
+                        {{ form_widget(form.content, { 'attr': {'class': 'form-control'}}) }}
+                        {{ form_label(form.content) }}
+                    </div>
+                </fieldset>
+                <fieldset class="mb-5">
+                    <legend>Medias :</legend>
+                    <div class="row">
+                        <div class="mb-3 form-control-file">
+                            {{ form_label(form.featured_image) }}
+                            <p class="small text-info">Si aucune image n'est ajoutée dans ce champ, une image par défaut sera utilisée.</p>
+                            {{ form_widget(form.featured_image, { 'attr': {'class': 'form-control'}}) }}
                         </div>
                     </div>
-                </div>
-                <div class="form-floating mb-3">
-                    {{ form_widget(form.content, { 'attr': {'class': 'form-control'}}) }}
-                    {{ form_label(form.content) }}
-                </div>
-                <div class="col-md-6">
                     <div class="mb-3 form-control-file">
-                        {{ form_label(form.featured_image) }}
-                        {{ form_widget(form.featured_image, { 'attr': {'class': 'form-control'}}) }}
+                        <label for="tricks_videos">Videos :</label>
+                        <p class="small text-info">Ajouter l'URL embed d'une vidéo Youtube.</p>
+                        <input type="text" id="tricks_videos" name="videos[]" class="form-control">
+                        <div class="videos"></div>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-3 add-video">
+                            Ajouter une vidéo
+                        </button>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3 form-control-file">
-                            {{ form_label(form.images) }}
-                            {{ form_widget(form.images, { 'attr': {'class': 'form-control'}}) }}
-                        </div>
+                    <div class="mb-3 form-control-file">
+                        <label for="tricks_images">Images :</label>
+                        <input type="file" name="images[]" id="tricks_images" class="form-control">
+                        <div class="images"></div>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-3 add-image">
+                            Ajouter une image
+                        </button>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3 form-control-file">
-                            {{ form_label(form.videos) }}
-                            {{ form_widget(form.videos, { 'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                </div>
+                </fieldset>
                 {{ form_rest(form) }}
-                <button type="submit" class="btn btn-outline-primary">Créer mon compte</button>
+                <button type="submit" class="btn btn-outline-primary float-end">Enregistrer</button>
             {{ form_end(form) }}
         </div>
     </div>

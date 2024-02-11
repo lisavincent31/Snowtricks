@@ -16,8 +16,11 @@ class Media
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+    
+    #[ORM\Column(length: 255)]
+    private ?string $url = null;
 
-    #[ORM\ManyToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'media', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trick $trick = null;
 
@@ -91,6 +94,18 @@ class Media
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }

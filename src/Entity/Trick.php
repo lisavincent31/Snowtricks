@@ -116,10 +116,8 @@ class Trick
 
     public function addMedium(Media $medium): static
     {
-        if (!$this->media->contains($medium)) {
-            $this->media->add($medium);
-            $medium->setTrick($this);
-        }
+        $this->media->add($medium);
+        $medium->setTrick($this);
 
         return $this;
     }

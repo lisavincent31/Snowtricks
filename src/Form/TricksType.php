@@ -33,19 +33,6 @@ class TricksType extends AbstractType
                 'label' => 'Description la figure :',
                 'required' => true
             ])
-            // On ajoute le champ "images" dans le formulaire
-            // Il n'est pas lié à la base de données (mapped à false)
-            ->add('images', FileType::class,[
-                'label' => 'Ajouter d\'autres images :',
-                'multiple' => true,
-                'mapped' => false,
-                'required' => false
-            ])
-            ->add('videos', TextType::class, [
-                'label' => 'Ajouter l\'URL d\'une vidéo :',
-                'required' => false,
-                'mapped' => false
-            ])
             ->add('featured_image', FileType::class,[
                 'label' => 'Image à la une :',
                 'multiple' => false,
@@ -59,6 +46,7 @@ class TricksType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
+            'allow_extra_fields' => true
         ]);
     }
 }
