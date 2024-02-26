@@ -12,18 +12,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Monolog\DateTimeImmutable;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 // Entities
 use App\Entity\Trick;
 use App\Entity\Media;
 // Form
 use App\Form\TricksType;
+// Repository
+use App\Repository\TrickRepository;
+use App\Repository\MediaRepository;
 
 class TrickController extends AbstractController
 {
 
     #[Route('/trick/new', name: 'app_trick')]
-    public function index(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $date = new DateTimeImmutable('now');
 
@@ -32,7 +36,6 @@ class TrickController extends AbstractController
         $form = $this->createForm(TricksType::class, $trick);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
-
             // get all images
             $images = $request->files->get('images');
             if($images) {
@@ -50,7 +53,7 @@ class TrickController extends AbstractController
                         // register image
                         $media = $this->registerMedia($image, $newFilename, 'image');
                         if($media) {
-                            $media->setUrl($newFilename);
+                            $media->setUrl('/assets/medias/tricks/'.$newFilename);
                             $trick->addMedium($media);
                         }
                     }catch(GeneralException $e){
@@ -63,58 +66,32 @@ class TrickController extends AbstractController
                 }
             }
 
-            // get the featured_image
-            $featured_image = $form->get('featured_image')->getData();
-            if($featured_image) {
 
-                // change name of the featured_image
-                $newFilename = $this->changeFilename($featured_image, $slugger);
-                
-                // place the featured_image in the folder
-                $featured_image->move(
-                    $this->getParameter('medias.tricks_directory'),
-                    $newFilename
-                );
-
-                // register the featured_image in database
-                try{
-                    // register image
-                    $media = $this->registerMedia($featured_image, $newFilename, 'image');
-                    if($media) {
-                        $media->setUrl($newFilename);
-                        $trick->setFeaturedImage($media);
-                    }
-                }catch(GeneralException $e){
-                    $error = 'Nous n\'avons pas pu enregistrer l\'image '.$image->getClientOriginalName();
-                    return $this->render('trick/index.html.twig', [
-                        'form' => $form->createView(),
-                        'error' => $error
-                    ]);
-                }
-            }
             // get the videos
             $videos = $request->get('videos');
             foreach($videos as $video) {
-                // register media in database
-                try{
-                    // register image
-                    $newFilename = 'video-'.uniqid();
-                    $media = $this->registerMedia($video, $newFilename, 'video');
-                    if($media) {
-                        $media->setUrl($video);
-                        $trick->addMedium($media);
+                if($video !== "" && $video !== null) {
+                    // register media in database
+                    try{
+                        // register image
+                        $newFilename = 'video-'.uniqid();
+                        $media = $this->registerMedia($video, $newFilename, 'video');
+                        if($media) {
+                            $media->setUrl($video);
+                            $trick->addMedium($media);
+                        }
+                    }catch(GeneralException $e){
+                        $error = 'Nous n\'avons pas pu enregistrer la vidéo.';
+                        return $this->render('trick/index.html.twig', [
+                            'form' => $form->createView(),
+                            'error' => $error
+                        ]);
                     }
-                }catch(GeneralException $e){
-                    $error = 'Nous n\'avons pas pu enregistrer la vidéo.';
-                    return $this->render('trick/index.html.twig', [
-                        'form' => $form->createView(),
-                        'error' => $error
-                    ]);
                 }
             }
 
             $trick->setAuthor($this->getUser());
-            $slug = $slugger->slug($form->get('name')->getData());
+            $slug = $slugger->slug($form->get('category')->getData().'-'.$form->get('name')->getData());
             $trick->setCreatedAt($date);
             $trick->setUpdatedAt($date);
             $trick->setSlug(strtolower($slug));
@@ -130,16 +107,117 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/edit/{id}', name: 'app_trick_edit')]
-    public function edit(int $id)
+    #[Route('/trick/{slug}', name: 'app_trick_show')]
+    public function show(string $slug, TrickRepository $repo, MediaRepository $mediaRepo): Response 
     {
-
+        $trick = $repo->findOneBySlug($slug);
+        $images = $mediaRepo->findByTypeImage($trick->getId(), 'image');
+        if(count($images) > 0) {
+            $feature = $images[0];
+        }else{
+            $feature = [
+                'url' => '/assets/medias/default.jpg',
+                'id' => 0
+            ];
+        }
+        return $this->render('trick/show.html.twig', [
+            'trick' => $trick,
+            'feature' => $feature,
+        ]);
     }
 
-    #[Route('/trick/delete/{id}', name: 'app_trick_delete')]
-    public function delete(int $id)
+    #[Route('/trick/{slug}/edit/', name: 'app_trick_edit')]
+    public function edit(string $slug, TrickRepository $repo, MediaRepository $mediaRepo, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $trick = $repo->findOneBySlug($slug);
+        $images = $mediaRepo->findByTypeImage($trick->getId(), 'image');
+        if(count($images) > 0) {
+            $feature = $images[0];
+        }else{
+            $feature = [
+                'url' => '/assets/medias/default.jpg',
+                'id' => 0
+            ];
+        }
+        $form = $this->createForm(TricksType::class, $trick);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $trick= $form->getData();
 
+            $entityManager->persist($trick);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'The trick was updated !');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('trick/edit.html.twig', [
+            'trick' => $trick,
+            'feature' => $feature,
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    #[Route('/trick/delete/{id}', name: 'app_trick_delete')]
+    public function delete(int $id, EntityManagerInterface $entityManager, Request $request)
+    {
+        $trick = $entityManager->getRepository(Trick::class)->find($id);
+
+        $entityManager->remove($trick);
+        $entityManager->flush();
+
+        $session = $request->getSession();
+        $session->set('flash_success', 'The trick was deleted.');
+
+        return $this->redirectToRoute('app_home');
+    }
+    
+    #[Route('/trick/{slug}/edit/media/{id}', name: 'app_trick_media_edit')]
+    public function updateMedia(string $slug, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $media = $entityManager->getRepository(Media::class)->find($request->get('id'));
+        $trick = $entityManager->getRepository(Trick::class)->find($request->get('slug'));
+
+        $image = $request->files->get('image');
+        // change name of the media
+        $newFilename = $this->changeFilename($image, $slugger);
+                    
+        // place the media in the folder
+        $image->move(
+            $this->getParameter('medias.tricks_directory'),
+            $newFilename
+        );
+
+        // register image
+        if($media) {
+            $media->setName($newFilename);
+            $media->setType('image');
+            $media->setCreatedAt(new \DateTime());
+            $media->setUpdatedAt(new \DateTime());
+            $media->setUrl('/assets/medias/tricks/'.$newFilename);
+        }
+
+        $entityManager->persist($media);
+        $entityManager->flush();
+        $this->addFlash('success', 'The trick was updated !');
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/trick/{slug}/delete/media/{id}', name: 'app_trick_media_delete')]
+    public function deleteMedia(int $id, EntityManagerInterface $entityManager, Request $request)
+    {
+        $media = $entityManager->getRepository(Media::class)->find($id);
+
+        $entityManager->remove($media);
+        $entityManager->flush();
+
+        $session = $request->getSession();
+        $session->set('flash_success', 'The media was deleted.');
+
+        return $this->redirectToRoute('app_home');
     }
 
     public function changeFilename(UploadedFile $file, SluggerInterface $slugger)

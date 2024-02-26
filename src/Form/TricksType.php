@@ -33,8 +33,8 @@ class TricksType extends AbstractType
                 'label' => 'Description la figure :',
                 'required' => true
             ])
-            ->add('featured_image', FileType::class,[
-                'label' => 'Image à la une :',
+            ->add('media', FileType::class,[
+                'label' => false,
                 'multiple' => false,
                 'mapped' => false,
                 'required' => false

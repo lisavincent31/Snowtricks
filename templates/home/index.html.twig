@@ -22,18 +22,24 @@
                 {% if tricks|default(null) %}
                     {% for trick in tricks %}
                         <div class="card mb-3 col-lg-4 p-0">
-                            <img src="/assets/medias/tricks/{{ trick.getFeaturedImage.name }}" class="card-img-top" width="100%" height="200px" style="object-fit:cover;"/>
+                            {% for media in trick.getMedia %}
+                                {% if (loop.first) and (media.type == 'image') %}
+                                    <img src="{{media.url}}" class="card-img-top" width="100%" height="200px" style="object-fit:cover;"/>
+                                {% endif %}
+                            {% endfor %}
                             <div class="card-body d-flex align-items-center justify-content-between">
                                 <div>
-                                    <h5 class="card-title">{{ trick.name }}</h5>
+                                    <a href="/trick/{{ trick.slug }}">
+                                        <h5 class="card-title">{{ trick.name }}</h5>
+                                    </a>
                                     <p class="small card-subtitle">{{ trick.category }}</p>
                                 </div>
                                 <div>
-                                    <a href="#" class="btn btn-outline-success py-2 px-3">
-                                        <i class="bi bi-pencil"></i>
+                                    <a href="{{ path('app_trick_edit', {slug: trick.slug}) }}" class="btn btn-outline-success px-2 py-1">
+                                        <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <a href="#" class="btn btn-outline-danger p-2 px-3">
-                                    <i class="bi bi-trash"></i>
+                                    <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-outline-danger px-2 py-1">
+                                        <i class="bi bi-trash3-fill"></i>
                                     </a>
                                 </div>
                             </div>

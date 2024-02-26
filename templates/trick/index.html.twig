@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create a trick{% endblock %}
+{% block title %}Créer une figure{% endblock %}
 
 {% block body %}
 <div class="container mt-4 vh-100">
@@ -35,14 +35,8 @@
                     </div>
                 </fieldset>
                 <fieldset class="mb-5">
+                    {{ form_row(form.media, {'attr': {'class': 'd-none'}}) }}
                     <legend>Medias :</legend>
-                    <div class="row">
-                        <div class="mb-3 form-control-file">
-                            {{ form_label(form.featured_image) }}
-                            <p class="small text-info">Si aucune image n'est ajoutée dans ce champ, une image par défaut sera utilisée.</p>
-                            {{ form_widget(form.featured_image, { 'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
                     <div class="mb-3 form-control-file">
                         <label for="tricks_videos">Videos :</label>
                         <p class="small text-info">Ajouter l'URL embed d'une vidéo Youtube.</p>

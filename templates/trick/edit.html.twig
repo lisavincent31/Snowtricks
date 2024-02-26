@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ trick.name }} {% endblock %}
+
+{% block body %}
+ {% if (app.user) and (app.user.id == trick.author.id) %}
+    <div class="container-fluid position-relative px-0" >
+        {# Full width images with trick's name #}
+        <div class="bg-image" style="background-image:url('{{ feature.url }}')">
+            <div class="float-end my-4 mx-3 p-2 bg-transparent">
+                <button type="button" class="btn btn-outline-success px-2 py-1 btn-modal" data-url="{{ feature.url }}" data-type="image" data-id="{{ feature.id }}">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+                <a href="/trick/{{ trick.slug }}/delete/" class="btn btn-outline-danger px-2 py-1">
+                    <i class="bi bi-trash3-fill"></i>
+                </a>
+            </div>
+            <div class="img-text bg-light">
+                <h1 class="text-center pt-2">{{ trick.name }}</h1>
+            </div>
+        </div>
+    </div>
+
+    {# Only on mobile devices #}
+    <div class="container d-none"> 
+        <button type="button" class="btn btn-outline-secondary mx-auto mt-4">See medias</button>
+    </div>
+
+    {# All images and videos for this thrick #}
+    <div class="container mt-4" id="slideshow">
+        <div class="row border shadow rounded p-2 justify-content-start h-100">
+            {% for media in trick.getMedia %}
+                {% if media.id!= feature.id %}
+                    <div class="col d-flex flex-column">
+                        {% if media.type == "image" %}
+                        <img src="{{media.url}}" class="img-fluid" alt="..." height="100px">
+                        {% else %}
+                        <iframe width="180" height="100" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                        {% endif %}
+
+                        <div class="mt-2 mode_edit">
+                            <button type="button" class="btn btn-outline-success px-2 py-1 btn-modal" data-url="{{ media.url }}" data-type="{{ media.type }}" data-id="{{ media.id }}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <a href="/trick/{{ trick.slug }}/delete/media/{{ media.id }}" class="btn btn-outline-danger px-2 py-1">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {# All informations #}
+    {{ form_start(form, {'method': 'PUT'}) }}
+        <div class="container my-4" id="informations">
+            <div class="row border shadow rounded p-2 justify-content-start">
+                <div class="mb-3">
+                    {{ form_label(form.name) }}
+                    <h1>
+                        {{ form_widget(form.name, { 'attr': {'class': 'form-control'}}) }}
+                    </h1>
+                </div>
+                <br>
+                <div class="mb-3">
+                    {{ form_label(form.content) }}
+                    <p class="pb-3">
+                        {{ form_widget(form.content, { 'attr': {'class': 'form-control'}}) }}
+                    </p>
+                </div>
+                <br>
+                <div class="mb-3 col-md-3">
+                    {{ form_label(form.category) }}
+                    {{ form_widget(form.category, { 'attr': {'class': 'form-control'}}) }}
+                </div>
+                {{ form_row(form.media, {'attr': {'class': 'd-none'}}) }}
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn btn-danger button-small mx-2 px-3 py-2">
+                        <a href="/trick/delete/{{trick.id}}" class=" text-white text-decoration-none">Supprimer</a>
+                    </button>
+                    <button type="submit" class="btn btn-dark button-small mx-2 px-3 py-2">Modifier</button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+ {% endif %}
+<div class="modal fade" id="modalMedia" tabindex="-1" aria-labelledby="modalMediaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMediaLabel">Modifier un média</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <form action="/trick/{{trick.slug}}/edit/media/" method="post" id="change_media" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12" id="current_media">
+                            <p>Média actuel</p>
+                        </div>
+                        <div class="col-12 mt-3" id="new_media"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block after_scripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            /**
+             * EDIT MEDIA MODAL
+             */
+            $('.btn-modal').on('click', function() {
+                var media_url = $(this).attr('data-url');
+                var media_type = $(this).attr('data-type');
+                var media_id = $(this).attr('data-id');
+
+                var action = $('#change_media').attr('action');
+                action += media_id;
+                console.log(action);
+                $('#change_media').attr('action', action);
+
+                if(media_type == 'image') {
+                    $('#current_media').append(`
+                        <img src="${media_url}" width="250px" height="100px" style="object-fit:scale-down"/>
+                    `);
+                    $('#new_media').append(`
+                        <label for="image">Choisissez une nouvelle image</label>
+                        <input type="file" name="image" id="image" class="form-control"/>
+                    `);
+                }
+
+                if(media_type == 'video') {
+                    $('#current_media').append(`
+                        <iframe width="180" height="100" src="${media_url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                    `);
+                    $('#new_media').append(`
+                        <label for="image">Choisissez une nouvelle vidéo</label>
+                        <input type="text" name="video" id="video" class="form-control"/>
+                    `);
+                }
+                
+                $('#modalMedia').modal('show');
+            });
+        });
+
+    </script>
+{% endblock %}

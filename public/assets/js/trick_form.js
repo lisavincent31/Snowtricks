@@ -28,4 +28,5 @@ $(document).ready(function() {
     $('.images').on('click', '.remove-image', function() {
         $(this).closest('.d-flex').remove();
     });
+
 });

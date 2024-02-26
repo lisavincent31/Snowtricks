@@ -21,6 +21,41 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
+    
+    /**
+    * @return Trick[] Returns an array of Trick objects
+    */
+   public function findByTypeImage($value, $type): array
+   {
+       return $this->createQueryBuilder('t')
+           ->andWhere('t.trick = :val')
+           ->andWhere('t.type = :type')
+           ->setParameter('val', $value)
+           ->setParameter('type', $type)
+           ->orderBy('t.id', 'ASC')
+           ->setMaxResults(10)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+   /**
+    * @return Trick[] Returns an array of Trick objects
+    */
+    public function findByTypeVideo($value, $type): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.trick = :val')
+            ->andWhere('t.type = :type')
+            ->setParameter('val', $value)
+            ->setParameter('type', $type)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Media[] Returns an array of Media objects
 //     */

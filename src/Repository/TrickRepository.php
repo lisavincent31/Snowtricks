@@ -36,6 +36,17 @@ class TrickRepository extends ServiceEntityRepository
 //        ;
 //    }
 
+    public function findOneBySlug($value): ?Trick
+    {
+       return $this->createQueryBuilder('t')
+           ->andWhere('t.slug = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+    }
+
+
 //    public function findOneBySomeField($value): ?Trick
 //    {
 //        return $this->createQueryBuilder('t')

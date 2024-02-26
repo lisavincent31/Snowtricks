@@ -31,9 +31,6 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Media::class, cascade: ['persist', 'remove'])]
     private Collection $media;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Media $featured_image = null;
-
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $author = null;
@@ -131,18 +128,6 @@ class Trick
             }
         }
 
-        return $this;
-    }
-
-    public function getFeaturedImage(): ?Media
-    {
-        return $this->featured_image;
-    }
-
-    public function setFeaturedImage(?Media $featured_image): static
-    {
-        $this->featured_image = $featured_image;
-        $featured_image->setTrick($this);
         return $this;
     }
 
