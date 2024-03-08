@@ -24,12 +24,12 @@
         </div>
     </div>
 
-    <div class="container"> 
+    <div class="container d-flex justify-content-center align-items-center" id="medias_show"> 
         <button type="button" class="btn btn-outline-secondary mx-auto mt-4">See medias</button>
     </div>
 
     {# All images and videos for this thrick #}
-    <div class="container mt-4" id="slideshow">
+    <div class="container mt-4 hide-mobile" id="slideshow">
         <div class="row border shadow rounded p-2 justify-content-start h-100">
             {% for media in trick.getMedia %}
                 {% if media.id != feature.id %}
@@ -66,21 +66,22 @@
                     <p class="m-0">Date de modification : {{ trick.updatedAt|date("d/m/Y") }}</p>
                 </li>
             </ul>
-           
-
-            {% if (app.user) %}
-                {% if (app.user.id == trick.author.id) %}
+        </div>
+        {# Comments block #}
+        <div class="container-fluid">
+            
+            {% if (app.user)  %}
+                {% if (app.user.id != trick.author.id) %}
                 {# Comment form if user is log in #}
                 <div class="row border-top pt-3">
                     <p class="lead bold">Laissez-nous un commentaire :</p>
-                    <form class="form d-flex justify-content-evenly">
+                    {# <form action="{{ route('app_trick_comment', [slug: trick.slug]) }}" class="form d-flex justify-content-evenly">
                         <div class="input-group mb-3 w-50">
                             <input type="text" class="form-control" placeholder="Message..." aria-label="Message..." aria-describedby="comment">
-                            {# <span class="" id="comment"> _ your username</span> #}
                             <button type="submit" class="btn btn-outline-success input-group-text px-3 py-2">Valider</button>
                         </div>
                         
-                    </form>
+                    </form> #}
                 </div>
                 {% endif %}
             {% else %}
@@ -95,78 +96,82 @@
                 </div>
             {% endif %}
             {# List of all comments #}
-            <div class="row border-top pt-3" id="comments">
+            <div class="row border-top pt-3 mb-4" id="comments">
                 <p class="lead bold">Commentaires :</p>
-                <div class="row">
-                    <div class="col-2">
-                        <img src="https://picsum.photos/id/256/70/70" class="pl-2 rounded-circle">
-                    </div>
-                    <figure class="col-10 border-bottom">
+                <div class="d-flex align-items-center p-0 border-bottom">
+                    <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
+                    <figure class="col-10">
                         <blockquote class="blockquote">
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
                         </blockquote>
-                        <figcaption class="blockquote-footer">
+                        <figcaption class="blockquote-footer mb-0">
                             <cite title="Username">Username</cite>
                         </figcaption>
                     </figure>
                 </div>
-                {# Examples... #}
-                <div class="row">
-                    <div class="col-2">
-                        <img src="https://picsum.photos/id/845/70/70" class="pl-2 rounded-circle">
-                    </div>
-                    <figure class="col-10 border-bottom">
+                <div class="d-flex align-items-center p-0 border-bottom">
+                    <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
+                    <figure class="col-10">
                         <blockquote class="blockquote">
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
                         </blockquote>
-                        <figcaption class="blockquote-footer">
-                            <cite title="Username">Username</cite>
-                        </figcaption>
-                    </figure>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <img src="https://picsum.photos/id/4/70/70" class="pl-2 rounded-circle">
-                    </div>
-                    <figure class="col-10 border-bottom">
-                        <blockquote class="blockquote">
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                            <cite title="Username">Username</cite>
-                        </figcaption>
-                    </figure>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <img src="https://picsum.photos/id/8/70/70" class="pl-2 rounded-circle">
-                    </div>
-                    <figure class="col-10 border-bottom">
-                        <blockquote class="blockquote">
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                            <cite title="Username">Username</cite>
-                        </figcaption>
-                    </figure>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <img src="https://picsum.photos/id/84/70/70" class="pl-2 rounded-circle">
-                    </div>
-                    <figure class="col-10 border-bottom">
-                        <blockquote class="blockquote">
-                            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
+                        <figcaption class="blockquote-footer mb-0">
                             <cite title="Username">Username</cite>
                         </figcaption>
                     </figure>
                 </div>
             </div>
-            <button type="button" class="m-auto w-25 btn btn-outline-dark">Load more ...</button>
+            <button type="button" class="m-auto w-25 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
         </div>
-
     </div>
+{% endblock %}
+
+{% block after_scripts %}
+<script>
+    $(document).ready(function() {
+        // Toggle Button to see and hide medias for mobile device
+        const btn_show_medias = $('#medias_show');
+
+        $(btn_show_medias).on('click', function() {
+            $('#slideshow').toggleClass("hide-mobile");
+            if($(this).find('button').text() == 'Hide medias') {
+                $(this).find('button').text('See medias');
+            }else{
+                $(this).find('button').text('Hide medias');
+            }
+        });
+
+        // Load more comments
+        $('#load-more-comments').click(function() {
+            $.ajax({
+                url: '/comments/load-more',
+                method: 'POST',
+                data: {
+                    trick_id : {{ trick.id }}
+                }
+                success: function(response) {
+                    $('#comments').html('');
+                    $('#comments').append('<p class="lead bold">Commentaires :</p>');
+                    response.forEach(function(comment) {
+                        $('#comments')
+                        .append(`<div class="d-flex align-items-center p-0 border-bottom">
+                            <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
+                            <figure class="col-10">
+                                <blockquote class="blockquote">
+                                    <p>${comment.content}</p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer mb-0">
+                                    <cite title="Username">${comment.author.name}</cite>
+                                </figcaption>
+                            </figure>
+                        </div>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

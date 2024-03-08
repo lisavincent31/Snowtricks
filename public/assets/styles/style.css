@@ -5,6 +5,10 @@ body {
     box-sizing: border-box;
 }
 
+#blank_marg {
+    display: none;
+}
+
 .margin-desktop {
     height: 100px;
 }
@@ -128,8 +132,15 @@ img.avatar {
 
 @media screen and (min-width: 200px) and (max-width: 640px) {
     /* General Styles */
+    #blank_marg {
+        display: block;
+        height: 200px;
+    }
     .margin-desktop {
-        height: 0;
+        height: 0!important;
+    }
+    .hide-mobile {
+        display: none;
     }
     header .navbar.fixed-top, footer, .desktop-btn {
         display: none!important;
@@ -163,4 +174,18 @@ img.avatar {
         height: 100vh;
         padding-bottom: 200px;
     }
+
+    #comments img {
+        width: 50px!important;
+    }
+
+    #comments figure {
+        margin-left: 0.5rem;
+    }
+
+    #comments figure p{
+        font-size: 14px;
+        text-align: justify;
+    }
+
 }

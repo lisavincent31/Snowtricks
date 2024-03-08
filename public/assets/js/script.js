@@ -40,3 +40,15 @@ $(window).scroll(function() {
         $('.go-top-btn').addClass('d-none');
     }
 });
+
+/**
+ * Change class on mobile device
+ */
+$(document).ready(function() {
+    if($(window).width() < 640) {
+        $('.list-group').removeClass('list-group-horizontal').addClass('list-group-vertical mx-auto p-0');
+        $('#slideshow').find('.row').addClass('w-100 mx-auto');
+        $('#tricks_container').find('.row').addClass('w-100 mx-auto');
+
+    }
+});
