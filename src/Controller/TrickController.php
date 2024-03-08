@@ -112,13 +112,12 @@ class TrickController extends AbstractController
     {
         $trick = $repo->findOneBySlug($slug);
         $images = $mediaRepo->findByTypeImage($trick->getId(), 'image');
+        $feature = [
+            'url' => '/assets/medias/default.jpg',
+            'id' => 0
+        ];
         if(count($images) > 0) {
             $feature = $images[0];
-        }else{
-            $feature = [
-                'url' => '/assets/medias/default.jpg',
-                'id' => 0
-            ];
         }
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
@@ -175,30 +174,40 @@ class TrickController extends AbstractController
     }
     
     #[Route('/trick/{slug}/edit/media/{id}', name: 'app_trick_media_edit')]
-    public function updateMedia(string $slug, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function updateMedia(
+        string $slug, 
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        SluggerInterface $slugger, 
+        TrickRepository $repo): Response
     {
-        $media = $entityManager->getRepository(Media::class)->find($request->get('id'));
-        $trick = $entityManager->getRepository(Trick::class)->find($request->get('slug'));
-
+        $trick = $repo->findOneBySlug($request->get('slug'));
+        // dd($request->get('slug'));
+        
         $image = $request->files->get('image');
         // change name of the media
         $newFilename = $this->changeFilename($image, $slugger);
-                    
+
+        if($request->get('id') == 0) {
+            $media = $this->registerMedia($image, $newFilename, 'image');
+            $media->setCreatedAt(new \DateTime());
+            $trick->addMedium($media);
+
+        }else{
+            $media = $entityManager->getRepository(Meia::class)->find($request->get('id'));
+        }    
         // place the media in the folder
         $image->move(
             $this->getParameter('medias.tricks_directory'),
             $newFilename
         );
 
+        $media->setName($newFilename);
+        $media->setType('image');
+        $media->setUpdatedAt(new \DateTime());
+        $media->setUrl('/assets/medias/tricks/'.$newFilename);
         // register image
-        if($media) {
-            $media->setName($newFilename);
-            $media->setType('image');
-            $media->setCreatedAt(new \DateTime());
-            $media->setUpdatedAt(new \DateTime());
-            $media->setUrl('/assets/medias/tricks/'.$newFilename);
-        }
-
+        
         $entityManager->persist($media);
         $entityManager->flush();
         $this->addFlash('success', 'The trick was updated !');
