@@ -17,6 +17,10 @@ body {
     font-size: 1.875rem;
 }
 
+.hide-desktop {
+    display: none;
+}
+
 /* Homepage Styles */
 #homepage {
     width: 100%;

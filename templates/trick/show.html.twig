@@ -72,7 +72,7 @@
             
             {% if (app.user)  %}
                 {% if (app.user.id != trick.author.id) %}
-                {# Comment form if user is log in #}
+                {# Comment form if user is logged in #}
                 <div class="row border-top pt-3">
                     <p class="lead bold">Laissez-nous un commentaire :</p>
                     <form action="{{ path('app_trick_comment', {slug: trick.slug}) }}" method="POST" class="form d-flex justify-content-evenly">
@@ -90,9 +90,9 @@
                 <div class="row border-top pt-3">
                     <p class="lead bold text-center">
                         Pour ajouter un commentaire vous devez vous 
-                        <a class="link">connecter</a> 
+                        <a class="link" href="/login">connecter</a> 
                         ou vous 
-                        <a class="link">inscrire</a>
+                        <a class="link" href="/register">inscrire</a>
                     .</p>
                 </div>
             {% endif %}
@@ -101,7 +101,7 @@
                 <p class="lead bold">Commentaires :</p>
                 {% if (trick.comments|length > 0) %}
                     {% for comment in trick.comments|reverse %}
-                    <div class="d-flex align-items-center < justify-content-between p-0 border-bottom">
+                    <div class="comment d-flex align-items-center < justify-content-between p-0 border-bottom">
                         <img src="/assets/medias/avatars/{{ comment.author.avatar }}" class="pl-2 rounded-circle avatar">
                         <figure class="col-10">
                             <blockquote class="blockquote">
@@ -116,10 +116,8 @@
                     </div>
                     {% endfor %}
                     {% if (trick.comments|length > 4) %}
-                        <button type="button" class="m-auto w-25 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
+                        <button type="button" class="mt-4 m-auto col-md-3 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
                     {% endif %}
-                {% else %}
-                <p> Pas encore de commentaires sur cet article. </p>
                 {% endif %}
             </div>
         </div>
@@ -141,38 +139,32 @@
                 $(this).find('button').text('Hide medias');
             }
         });
+        /* Limit 4 comments */
+        limitComments();
 
         // Load more comments
-        // $('#load-more-comments').click(function() {
-        //     $.ajax({
-        //         url: '/comments/load-more',
-        //         method: 'POST',
-        //         data: {
-        //             trick_id : {{ trick.id }}
-        //         }
-        //         success: function(response) {
-        //             $('#comments').html('');
-        //             $('#comments').append('<p class="lead bold">Commentaires :</p>');
-        //             response.forEach(function(comment) {
-        //                 $('#comments')
-        //                 .append(`<div class="d-flex align-items-center p-0 border-bottom">
-        //                     <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
-        //                     <figure class="col-10">
-        //                         <blockquote class="blockquote">
-        //                             <p>${comment.content}</p>
-        //                         </blockquote>
-        //                         <figcaption class="blockquote-footer mb-0">
-        //                             <cite title="Username">${comment.author.name}</cite>
-        //                         </figcaption>
-        //                     </figure>
-        //                 </div>`);
-        //             });
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error(error);
-        //         }
-        //     });
-        // });
+        $('#load-more-comments').click(function() {
+            var hidden_comments = $('#comments').find('.comment.d-none');
+            if($(this).text() == 'Voir plus') {
+                $(hidden_comments).removeClass('d-none').addClass('d-flex');
+                $(this).text('Voir moins');
+            }else{
+                limitComments();
+                $(this).text('Voir plus');
+            }
+        });
     });
+
+    function limitComments()
+    {
+        const comments = $('#comments .comment');
+        var index = 1;
+        $.each(comments, function() {
+            if(index > 4) {
+                $(this).addClass('d-none').removeClass('d-flex');
+            }
+            index++;
+        });
+    }
 </script>
 {% endblock %}
