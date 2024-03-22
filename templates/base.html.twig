@@ -31,10 +31,20 @@
                 </div>
             {% endif %}
             {% for flash in app.flashes('success') %}
-                <div class="alert alert-success">{{ flash }}</div>
+                <div class="alert alert-success alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert-message">
+                        <strong>Succès !</strong> {{ flash }}
+                    </div>
+                </div>
             {% endfor %}
             {% for flash in app.flashes('error') %}
-                <div class="alert alert-danger">{{ flash }}</div>
+                <div class="alert alert-warning alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert-message">
+                        <strong>Erreur ! </strong>, {{ flash }}
+                    </div>
+                </div>
             {% endfor %}
             {% block body %}{% endblock %}
         </main>
