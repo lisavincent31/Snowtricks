@@ -2,7 +2,9 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals: 
         app_url: '%env(APP_URL)%'
+        debug: true
 
 when@test:
     twig:
         strict_variables: true
+        debug: true

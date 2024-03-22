@@ -22,6 +22,20 @@
 
         <main>
             <div class="container-fluid margin-desktop" style="height:100px;"></div>
+            {% if app.user and app.user.isVerified == false %}
+                <div class="alert alert-warning alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert-message">
+                        <strong>Votre compte n'est pas activé</strong>, <a href="">renvoyer le lien d'activation</a>
+                    </div>
+                </div>
+            {% endif %}
+            {% for flash in app.flashes('success') %}
+                <div class="alert alert-success">{{ flash }}</div>
+            {% endfor %}
+            {% for flash in app.flashes('error') %}
+                <div class="alert alert-danger">{{ flash }}</div>
+            {% endfor %}
             {% block body %}{% endblock %}
         </main>
         <!-- Footer -->
