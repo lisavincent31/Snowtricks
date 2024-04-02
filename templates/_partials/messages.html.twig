@@ -1,12 +1,16 @@
-<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-        <strong class="me-auto">Message</strong>
-        <small>11 mins ago</small>
-        <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true"></span>
-        </button>
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <strong>Succès ! </strong> {{ message }}
+        </div>
     </div>
-    <div class="toast-body">
-        Hello, world! This is a toast message.
+{% endfor %}
+{% for message in app.flashes('error') %}
+    <div class="alert alert-warning alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <strong>Erreur ! </strong> {{ message }}
+        </div>
     </div>
-</div>
+{% endfor %}

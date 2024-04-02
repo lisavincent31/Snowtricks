@@ -51,4 +51,24 @@ class EmailVerifier
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    public function sendEmailResetPassword(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email)
+    {
+        $signatureComponents = $this->verifyEmailHelper->generateSignature(
+            $verifyEmailRouteName,
+            $user->getId(),
+            $user->getEmail(),
+            ['id' => $user->getId()]
+        );
+
+        $context = $email->getContext();
+        $context['signedUrl'] = $signatureComponents->getSignedUrl();
+        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
+        $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
+        $context['user'] = $user;
+
+        $email->context($context);
+
+        $this->mailer->send($email);
+    }
 }
