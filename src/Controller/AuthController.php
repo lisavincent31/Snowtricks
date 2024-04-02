@@ -122,7 +122,7 @@ class AuthController extends AbstractController
             ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
             ->to($user->getEmail())
             ->subject('Please confirm your Email')
-            ->htmlTemplate('auth/confirmation_email.html.twig')
+            ->htmlTemplate('emails/confirmation_email.html.twig')
         );
     }
 

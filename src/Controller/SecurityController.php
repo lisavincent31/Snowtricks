@@ -11,6 +11,8 @@ use App\Repository\UsersRepository;
 use App\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
+use App\Repository\TrickRepository;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class SecurityController extends AbstractController
@@ -62,7 +64,7 @@ class SecurityController extends AbstractController
             ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
             ->to($user->getEmail())
             ->subject('Modification de votre mot de passe')
-            ->htmlTemplate('auth/reset_password.html.twig')
+            ->htmlTemplate('emails/email_password.html.twig')
         );
 
         $this->addFlash(
@@ -73,8 +75,56 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/reset_password', name: 'app_reset_password')]
-    public function reset_password(): void
+    public function reset_password(Request $request): Response
     {
+        $id = $request->get('id'); // retrieve user_id from url
+        // verify if user_id exists and is not null
+        if(null === $id) {
+            $this->addFlash('error', 'Désolé, une erreur est survenue. Veuillez réessayer.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $user = $this->userRepository->find($id);
+
+        // ensure the user exists in persistence
+        if(null === $user) {
+            $this->addFlash('error', 'Désolé, aucun compte n\'a été trouvé avec cette adresse email.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('security/reset_password.html.twig', [
+            'user' => $user,
+        ]);
+
+    }
+
+    #[Route(path: '/update_password', name: 'app_update_password')]
+    public function update_password(Request $request, TrickRepository $trickRepository, UserPasswordHasherInterface $passwordHasher,): Response
+    {
+        $user = $this->userRepository->findOneById($request->get('user_id'));
+
+        if(null === $user) {
+            $this->addFlash('error', 'Désolé nous n\'avons pas pu trouver un compte associé à cet email.');
+            $this->redirectToRoute('app_home');
+        }
+
+        $password = $request->get('password');
+        $confirm = $request->get('confirm_password');
+
+        if($password !== $confirm) {
+            $this->addFlash('error', 'Les mots de passe ne correspondent pas.');
+            $this->redirectToRoute('app_reset_password');
+        }
         
+        $hashedPassword = $passwordHasher->hashPassword($user, $password);
+        $this->userRepository->upgradePassword($user, $hashedPassword);
+
+        $this->addFlash('success', 'Mot de passe modifié avec succès.');
+
+        $tricks = $trickRepository->findAll();
+        return $this->render('home/index.html.twig', [
+            'title' => "Accueil",
+            'tricks' => $tricks
+        ]);
     }
 }
