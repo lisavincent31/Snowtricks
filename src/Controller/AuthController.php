@@ -112,6 +112,20 @@ class AuthController extends AbstractController
         ]);
     }
 
+    #[Route('/resend_email/{id}', name: 'app_resend_email')]
+    public function resendEmail(int $id): Response
+    {
+        $user = $this->userRepository->find($id);
+
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            (new TemplatedEmail())
+            ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
+            ->to($user->getEmail())
+            ->subject('Please confirm your Email')
+            ->htmlTemplate('emails/confirmation_email.html.twig')
+        );
+    }
+
     #[Route('/verify_email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request): Response
     {
