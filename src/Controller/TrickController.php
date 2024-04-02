@@ -66,7 +66,6 @@ class TrickController extends AbstractController
                 }
             }
 
-
             // get the videos
             $videos = $request->get('videos');
             foreach($videos as $video) {
@@ -99,6 +98,7 @@ class TrickController extends AbstractController
             $entityManager->persist($trick);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Votre article a été créé avec succès.');
             return $this->redirectToRoute('app_home');
         }
 
@@ -126,7 +126,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}/edit/', name: 'app_trick_edit')]
-    public function edit(string $slug, TrickRepository $repo, MediaRepository $mediaRepo, EntityManagerInterface $entityManager, Request $request): Response
+    public function edit(string $slug, TrickRepository $repo, SluggerInterface $slugger, MediaRepository $mediaRepo, EntityManagerInterface $entityManager, Request $request): Response
     {
         $trick = $repo->findOneBySlug($slug);
         $images = $mediaRepo->findByTypeImage($trick->getId(), 'image');
@@ -143,10 +143,63 @@ class TrickController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             $trick= $form->getData();
 
+            // get all images
+            $images = $request->files->get('images');
+            if($images) {
+                foreach($images as $image) {
+                    // change name of the media
+                    $newFilename = $this->changeFilename($image, $slugger);
+                    
+                    // place the media in the folder
+                    $image->move(
+                        $this->getParameter('medias.tricks_directory'),
+                        $newFilename
+                    );
+    
+                    try{
+                        // register image
+                        $media = $this->registerMedia($image, $newFilename, 'image');
+                        if($media) {
+                            $media->setUrl('/assets/medias/tricks/'.$newFilename);
+                            $trick->addMedium($media);
+                        }
+                    }catch(GeneralException $e){
+                        $error = 'Nous n\'avons pas pu enregistrer l\'image '.$image->getClientOriginalName();
+                        return $this->render('trick/index.html.twig', [
+                            'form' => $form->createView(),
+                            'error' => $error
+                        ]);
+                    }
+                }
+            }
+
+            // get the videos
+            $videos = $request->get('videos');
+            foreach($videos as $video) {
+                if($video !== "" && $video !== null) {
+                    // register media in database
+                    try{
+                        // register image
+                        $newFilename = 'video-'.uniqid();
+                        $media = $this->registerMedia($video, $newFilename, 'video');
+                        if($media) {
+                            $media->setUrl($video);
+                            $trick->addMedium($media);
+                        }
+                    }catch(GeneralException $e){
+                        $error = 'Nous n\'avons pas pu enregistrer la vidéo.';
+                        return $this->render('trick/index.html.twig', [
+                            'form' => $form->createView(),
+                            'error' => $error
+                        ]);
+                    }
+                }
+            }
+
             $entityManager->persist($trick);
             $entityManager->flush();
 
-            $this->addFlash('success', 'The trick was updated !');
+            $this->addFlash('success', 'L\'article a été modifié avec succès !');
 
             return $this->redirectToRoute('app_home');
         }
@@ -167,8 +220,7 @@ class TrickController extends AbstractController
         $entityManager->remove($trick);
         $entityManager->flush();
 
-        $session = $request->getSession();
-        $session->set('flash_success', 'The trick was deleted.');
+        $this->addFlash('success', 'L\'article a été supprimé avec succès !');
 
         return $this->redirectToRoute('app_home');
     }
@@ -210,7 +262,7 @@ class TrickController extends AbstractController
         
         $entityManager->persist($media);
         $entityManager->flush();
-        $this->addFlash('success', 'The trick was updated !');
+        $this->addFlash('success', 'Le média a été modifiée avec succès !');
 
         return $this->redirectToRoute('app_home');
     }
@@ -223,8 +275,8 @@ class TrickController extends AbstractController
         $entityManager->remove($media);
         $entityManager->flush();
 
-        $session = $request->getSession();
-        $session->set('flash_success', 'The media was deleted.');
+        $this->addFlash('success', 'Le média a été supprimé avec succès !');
+
 
         return $this->redirectToRoute('app_home');
     }

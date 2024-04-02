@@ -104,6 +104,7 @@ class AuthController extends AbstractController
                 ->htmlTemplate('auth/confirmation_email.html.twig')
             );
 
+            $this->addFlash('success', 'Votre compte a bien été créé.');
             return $this->redirectToRoute('app_home');
         }
         // return the view

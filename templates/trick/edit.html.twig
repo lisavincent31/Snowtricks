@@ -74,7 +74,27 @@
                     {{ form_label(form.category) }}
                     {{ form_widget(form.category, { 'attr': {'class': 'form-control'}}) }}
                 </div>
-                {{ form_row(form.media, {'attr': {'class': 'd-none'}}) }}
+                <fieldset class="mb-5">
+                    {{ form_row(form.media, {'attr': {'class': 'd-none'}}) }}
+                    <legend>Medias :</legend>
+                    <div class="mb-3 form-control-file">
+                        <label for="tricks_videos">Videos :</label>
+                        <p class="small text-info">Ajouter l'URL embed d'une vidéo Youtube.</p>
+                        <input type="text" id="tricks_videos" name="videos[]" class="form-control">
+                        <div class="videos"></div>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-3 add-video">
+                            Ajouter une vidéo
+                        </button>
+                    </div>
+                    <div class="mb-3 form-control-file">
+                        <label for="tricks_images">Images :</label>
+                        <input type="file" name="images[]" id="tricks_images" class="form-control">
+                        <div class="images"></div>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-3 add-image">
+                            Ajouter une image
+                        </button>
+                    </div>
+                </fieldset>
                 <div class="d-flex align-items-center justify-content-end">
                     <button type="button" class="btn btn-danger button-small mx-2 px-3 py-2">
                         <a href="/trick/delete/{{trick.id}}" class=" text-white text-decoration-none">Supprimer</a>
