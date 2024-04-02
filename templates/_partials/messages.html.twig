@@ -1,0 +1,16 @@
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <strong>Succès ! </strong> {{ message }}
+        </div>
+    </div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+    <div class="alert alert-warning alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <strong>Erreur ! </strong> {{ message }}
+        </div>
+    </div>
+{% endfor %}
