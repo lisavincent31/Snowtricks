@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container-fluid position-relative px-0" >
         {# Full width images with trick's name #}
-        <div class="bg-image" style="background-image:url('/assets/medias/tricks/{{ feature.name }}')">
+        <div class="bg-image" style="background-image:url('{{ feature.url }}')">
             {% if (app.user) %}
                 {% if (app.user.id == trick.author.id) %}
                     <div class="float-end my-4 mx-3 p-2 bg-transparent">
@@ -72,16 +72,17 @@
             
             {% if (app.user)  %}
                 {% if (app.user.id != trick.author.id) %}
-                {# Comment form if user is log in #}
+                {# Comment form if user is logged in #}
                 <div class="row border-top pt-3">
                     <p class="lead bold">Laissez-nous un commentaire :</p>
-                    {# <form action="{{ route('app_trick_comment', [slug: trick.slug]) }}" class="form d-flex justify-content-evenly">
-                        <div class="input-group mb-3 w-50">
-                            <input type="text" class="form-control" placeholder="Message..." aria-label="Message..." aria-describedby="comment">
+                    <form action="{{ path('app_trick_comment', {slug: trick.slug}) }}" method="POST" class="form d-flex justify-content-evenly">
+                        <input type="hidden" name="_token" value="{{csrf_token('comment_token')}}">
+                        <div class="input-group mb-3">
+                            <input type="text" name="content" id="content" class="form-control" placeholder="Message..." aria-label="Message..." aria-describedby="comment">
                             <button type="submit" class="btn btn-outline-success input-group-text px-3 py-2">Valider</button>
                         </div>
                         
-                    </form> #}
+                    </form>
                 </div>
                 {% endif %}
             {% else %}
@@ -89,40 +90,38 @@
                 <div class="row border-top pt-3">
                     <p class="lead bold text-center">
                         Pour ajouter un commentaire vous devez vous 
-                        <a class="link">connecter</a> 
+                        <a class="link" href="/login">connecter</a> 
                         ou vous 
-                        <a class="link">inscrire</a>
+                        <a class="link" href="/register">inscrire</a>
                     .</p>
                 </div>
             {% endif %}
             {# List of all comments #}
             <div class="row border-top pt-3 mb-4" id="comments">
                 <p class="lead bold">Commentaires :</p>
-                <div class="d-flex align-items-center p-0 border-bottom">
-                    <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
-                    <figure class="col-10">
-                        <blockquote class="blockquote">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer mb-0">
-                            <cite title="Username">Username</cite>
-                        </figcaption>
-                    </figure>
-                </div>
-                <div class="d-flex align-items-center p-0 border-bottom">
-                    <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
-                    <figure class="col-10">
-                        <blockquote class="blockquote">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer mb-0">
-                            <cite title="Username">Username</cite>
-                        </figcaption>
-                    </figure>
-                </div>
+                {% if (trick.comments|length > 0) %}
+                    {% for comment in trick.comments|reverse %}
+                    <div class="comment d-flex align-items-center < justify-content-between p-0 border-bottom">
+                        <img src="/assets/medias/avatars/{{ comment.author.avatar }}" class="pl-2 rounded-circle avatar">
+                        <figure class="col-10">
+                            <blockquote class="blockquote">
+                                <p>{{ comment.content }}</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer mb-0">
+                                <cite title="Username">
+                                @{{ comment.author.username }} : {{comment.createdAt|format_date(locale='fr') }}
+                                </cite>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    {% endfor %}
+                    {% if (trick.comments|length > 4) %}
+                        <button type="button" class="mt-4 m-auto col-md-3 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
+                    {% endif %}
+                {% endif %}
             </div>
-            <button type="button" class="m-auto w-25 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
         </div>
+        <div id="blank_marg"></div>
     </div>
 {% endblock %}
 
@@ -140,38 +139,32 @@
                 $(this).find('button').text('Hide medias');
             }
         });
+        /* Limit 4 comments */
+        limitComments();
 
         // Load more comments
         $('#load-more-comments').click(function() {
-            $.ajax({
-                url: '/comments/load-more',
-                method: 'POST',
-                data: {
-                    trick_id : {{ trick.id }}
-                }
-                success: function(response) {
-                    $('#comments').html('');
-                    $('#comments').append('<p class="lead bold">Commentaires :</p>');
-                    response.forEach(function(comment) {
-                        $('#comments')
-                        .append(`<div class="d-flex align-items-center p-0 border-bottom">
-                            <img src="https://picsum.photos/id/256/50/50" class="pl-2 rounded-circle">
-                            <figure class="col-10">
-                                <blockquote class="blockquote">
-                                    <p>${comment.content}</p>
-                                </blockquote>
-                                <figcaption class="blockquote-footer mb-0">
-                                    <cite title="Username">${comment.author.name}</cite>
-                                </figcaption>
-                            </figure>
-                        </div>`);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
+            var hidden_comments = $('#comments').find('.comment.d-none');
+            if($(this).text() == 'Voir plus') {
+                $(hidden_comments).removeClass('d-none').addClass('d-flex');
+                $(this).text('Voir moins');
+            }else{
+                limitComments();
+                $(this).text('Voir plus');
+            }
         });
     });
+
+    function limitComments()
+    {
+        const comments = $('#comments .comment');
+        var index = 1;
+        $.each(comments, function() {
+            if(index > 4) {
+                $(this).addClass('d-none').removeClass('d-flex');
+            }
+            index++;
+        });
+    }
 </script>
 {% endblock %}
