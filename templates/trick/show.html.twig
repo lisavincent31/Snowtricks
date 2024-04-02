@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ trick.name }} {% endblock %}
+
+{% block body %}
+    <div class="container-fluid position-relative px-0" >
+        {# Full width images with trick's name #}
+        <div class="bg-image" style="background-image:url('{{ feature.url }}')">
+            {% if (app.user) %}
+                {% if (app.user.id == trick.author.id) %}
+                    <div class="float-end my-4 mx-3 p-2 bg-transparent">
+                        <a href="{{ path('app_trick_edit', {slug: trick.slug}) }}" class="btn btn-outline-success px-2 py-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-outline-danger px-2 py-1">
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="img-text bg-light">
+                <h1 class="text-center pt-2">{{ trick.name }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center" id="medias_show"> 
+        <button type="button" class="btn btn-outline-secondary mx-auto mt-4">See medias</button>
+    </div>
+
+    {# All images and videos for this thrick #}
+    <div class="container mt-4 hide-mobile" id="slideshow">
+        <div class="row border shadow rounded p-2 justify-content-start h-100">
+            {% for media in trick.getMedia %}
+                {% if media.id != feature.id %}
+                    <div class="col d-flex flex-column">
+                    {% if media.type == "image" %}
+                        <img src="/assets/medias/tricks/{{media.name}}" class="img-fluid" alt="..." height="100px">
+                    {% else %}
+                        <iframe width="180" height="100" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {# All informations #}
+    <div class="container my-4" id="informations">
+        <div class="row border shadow rounded p-2 justify-content-start">
+            <h1 class="py-4">{{ trick.name }}</h1>
+            <br>
+            <p class="pb-3">{{ trick.content }}</p>
+            <br>
+            <ul class="list-group list-group-horizontal w-100 mb-4">
+                <li class="col list-group-item d-flex align-items-center">
+                    <img src="/assets/medias/avatars/{{ trick.author.avatar }}" class="rounded-circle avatar" width="25px" height="25px">
+                    <p class="my-0">Auteur : {{ trick.author.username }}</p>
+                </li>
+                <li class="col list-group-item d-flex align-items-center">
+                    <i class="bi bi-collection-fill px-2"></i>
+                    <p class="m-0">Collection : {{ trick.category }}</p>
+                </li>
+                <li class="col small list-group-item d-flex align-items-center">
+                    <i class="bi bi-calendar-check-fill px-2"></i>
+                    <p class="m-0">Date de modification : {{ trick.updatedAt|date("d/m/Y") }}</p>
+                </li>
+            </ul>
+        </div>
+        {# Comments block #}
+        <div class="container-fluid">
+            
+            {% if (app.user)  %}
+                {% if (app.user.id != trick.author.id) %}
+                {# Comment form if user is logged in #}
+                <div class="row border-top pt-3">
+                    <p class="lead bold">Laissez-nous un commentaire :</p>
+                    <form action="{{ path('app_trick_comment', {slug: trick.slug}) }}" method="POST" class="form d-flex justify-content-evenly">
+                        <input type="hidden" name="_token" value="{{csrf_token('comment_token')}}">
+                        <div class="input-group mb-3">
+                            <input type="text" name="content" id="content" class="form-control" placeholder="Message..." aria-label="Message..." aria-describedby="comment">
+                            <button type="submit" class="btn btn-outline-success input-group-text px-3 py-2">Valider</button>
+                        </div>
+                        
+                    </form>
+                </div>
+                {% endif %}
+            {% else %}
+                {# Redirection if user is not log in #}
+                <div class="row border-top pt-3">
+                    <p class="lead bold text-center">
+                        Pour ajouter un commentaire vous devez vous 
+                        <a class="link" href="/login">connecter</a> 
+                        ou vous 
+                        <a class="link" href="/register">inscrire</a>
+                    .</p>
+                </div>
+            {% endif %}
+            {# List of all comments #}
+            <div class="row border-top pt-3 mb-4" id="comments">
+                <p class="lead bold">Commentaires :</p>
+                {% if (trick.comments|length > 0) %}
+                    {% for comment in trick.comments|reverse %}
+                    <div class="comment d-flex align-items-center < justify-content-between p-0 border-bottom">
+                        <img src="/assets/medias/avatars/{{ comment.author.avatar }}" class="pl-2 rounded-circle avatar">
+                        <figure class="col-10">
+                            <blockquote class="blockquote">
+                                <p>{{ comment.content }}</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer mb-0">
+                                <cite title="Username">
+                                @{{ comment.author.username }} : {{comment.createdAt|format_date(locale='fr') }}
+                                </cite>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    {% endfor %}
+                    {% if (trick.comments|length > 4) %}
+                        <button type="button" class="mt-4 m-auto col-md-3 btn btn-outline-dark" id="load-more-comments">Voir plus</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div id="blank_marg"></div>
+    </div>
+{% endblock %}
+
+{% block after_scripts %}
+<script>
+    $(document).ready(function() {
+        // Toggle Button to see and hide medias for mobile device
+        const btn_show_medias = $('#medias_show');
+
+        $(btn_show_medias).on('click', function() {
+            $('#slideshow').toggleClass("hide-mobile");
+            if($(this).find('button').text() == 'Hide medias') {
+                $(this).find('button').text('See medias');
+            }else{
+                $(this).find('button').text('Hide medias');
+            }
+        });
+        /* Limit 4 comments */
+        limitComments();
+
+        // Load more comments
+        $('#load-more-comments').click(function() {
+            var hidden_comments = $('#comments').find('.comment.d-none');
+            if($(this).text() == 'Voir plus') {
+                $(hidden_comments).removeClass('d-none').addClass('d-flex');
+                $(this).text('Voir moins');
+            }else{
+                limitComments();
+                $(this).text('Voir plus');
+            }
+        });
+    });
+
+    function limitComments()
+    {
+        const comments = $('#comments .comment');
+        var index = 1;
+        $.each(comments, function() {
+            if(index > 4) {
+                $(this).addClass('d-none').removeClass('d-flex');
+            }
+            index++;
+        });
+    }
+</script>
+{% endblock %}

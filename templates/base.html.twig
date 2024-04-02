@@ -2,25 +2,52 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex, nofollow">
         <title>SnowTricks - {% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         
         <!-- CSS, Bootstrap and Theme Styles -->
         {% block stylesheets %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="/assets/bootstrap.min.css" />
-        <link rel="stylesheet" href="/assets/style.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
+        <link rel="stylesheet" href="/assets/styles/style.css" />
         {% endblock %}<!-- #End CSS, Bootstrap and Theme Styles -->
-
-        
     </head>
     <body>
+        <!-- Header Navbar -->
         {{ include('_partials/nav.html.twig') }}
-        {% block body %}{% endblock %}
+        <!-- #End Header Navbar -->
 
-        <!-- Javascript and Jquery files -->
+        <main>
+            <div class="container-fluid margin-desktop" style="height:100px;"></div>
+            {% if app.user and app.user.isVerified == false %}
+                <div class="alert alert-warning alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert-message">
+                        <strong>Votre compte n'est pas activé</strong>, <a href="">renvoyer le lien d'activation</a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {{include('_partials/messages.html.twig')}}
+            {% block body %}{% endblock %}
+        </main>
+        <!-- Footer -->
+        {{ include('_partials/footer.html.twig') }}
+        <!-- #End Footer -->
+
         {% block javascripts %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        {% endblock %}<!-- #End Javascript and Jquery files -->
+        <!-- Javascript and Jquery files -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <!-- Custom Javascript -->
+        <script type="text/javascript" src="/assets/js/script.js"></script>
+        <script type="text/javascript" src="/assets/js/trick_form.js"></script>
+        <script type="text/javascript" src="/assets/js/trick.js"></script>
+        {% endblock %}
+        {% block after_scripts %}{% endblock %}
     </body>
 </html>

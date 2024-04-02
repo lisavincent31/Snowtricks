@@ -1,0 +1,195 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#blank_marg {
+    display: none;
+}
+
+.margin-desktop {
+    height: 100px;
+}
+
+.btn-links {
+    font-size: 1.875rem;
+}
+
+.hide-desktop {
+    display: none;
+}
+
+/* Homepage Styles */
+#homepage {
+    width: 100%;
+}
+
+.caption h1,
+#homepage .caption p {
+    background-color: transparent;
+    opacity: 1;
+    color: #fff;
+}
+
+.bg-img {
+    position: relative;
+    opacity: 0.65;
+    background-image: url('/assets/images/homepage.jpg');
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.bg-img .caption {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    background-color: #1a1a1a;
+    opacity: 0.85;
+}
+
+header .navbar.fixed-bottom {
+    display: none;
+}
+
+img.avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+#go-top,
+#go-bottom {
+    width: fit-content;
+}
+
+/* Trick details page */
+.bg-image {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 550px;
+}
+
+.img-text {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translate(0%, -50%);
+}
+
+.img-text h1 {
+    text-align: center;
+}
+
+#slideshow img {
+    height: 100px;
+    width: 200px;
+    object-fit: cover;
+}
+    
+#slideshow  iframe {
+    height: 100px;
+    width: 200px;
+}
+
+img.avatar {
+    object-fit: cover;
+}
+
+#comments img {
+    width: 50px!important;
+    height: 50px!important;
+}
+
+.list-group-item p {
+    margin-left: 0.5rem;
+}
+
+/* Tricks Edit Styles */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type="file"], .btn-file input[type="text"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    cursor: pointer;
+    display: block;
+}
+
+@media screen and (min-width: 200px) and (max-width: 640px) {
+    /* General Styles */
+    #blank_marg {
+        display: block;
+        height: 200px;
+    }
+    .margin-desktop {
+        height: 0!important;
+    }
+    .hide-mobile {
+        display: none;
+    }
+    header .navbar.fixed-top, footer, .desktop-btn {
+        display: none!important;
+    }
+    header .navbar.fixed-bottom {
+        display: block;
+    }
+    .nav-link {
+        font-size: 1.875rem;
+    }
+    .go-top-btn,
+    .go-bottom-btn {
+        position: absolute;
+        bottom: 100px;
+        right: 10px;
+    }
+    .go-top-btn .btn, .go-top-btn .btn:hover,
+    .go-bottom-btn .btn, .go-bottom-btn .btn:hover {
+        --bs-btn-color : white;
+        --bs-btn-hover-color : white;
+        --bs-btn-bg : #1a1a1a;
+        --bs-btn-hover-bg : #1a1a1a;
+        padding: .5rem;
+    }
+    /* Homepage Styles */
+    #homepage, .bg-img {
+        height: calc(100vh - 132px);
+    }
+
+    #tricks_container {
+        height: 100vh;
+        padding-bottom: 200px;
+    }
+
+    #comments img {
+        width: 50px!important;
+    }
+
+    #comments figure {
+        margin-left: 0.5rem;
+    }
+
+    #comments figure p{
+        font-size: 14px;
+        text-align: justify;
+    }
+
+}
