@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+<div class="container mt-5 vh-100">
+    <div class="row p-4">
+        <h1 class="text-center text-uppercase">Bonjour {{ user.username }}</h1>
+        <h4 class="text-center">Tous vos articles</h4>
+    </div>
+    <div class="row justify-content-evenly mt-4 p-4">
+        <div class="col-3">
+            <a class="btn btn-outline-primary w-100" href="dashboard/account">Mes Infos</a>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary w-100">Mes Articles</button>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-outline-primary w-100">Mes Commentaires</button>
+        </div>
+    </div>
+
+    <div class="row mt-4 p-4">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>First Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trick in tricks %}
+                    <td>{{trick.title}}</td>
+                    <td>{{trick.content}}</td>
+                    {# <td>{{trick.getMedia.first}}</td> #}
+                    <td>
+                        <button class="btn btn-blue">See trick</button>
+                    </td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

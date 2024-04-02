@@ -26,13 +26,14 @@
                     {% if (app.user) %}
                     <!-- Logged_in_user menu -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle px-3" href="#" id="compte" data-bs-toggle="dropdown" aria-expanded="true">
-                            <img src="assets/medias/avatars/{{ app.user.avatar }}" class="avatar pl-2 rounded-circle">
+                        <a class="nav-link dropdown-toggle px-3" id="compte" data-bs-toggle="dropdown" aria-expanded="true">
+                            <img src="/assets/medias/avatars/{{ app.user.avatar }}" class="avatar pl-2 rounded-circle">
                             {{ app.user.username }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="compte" data-bs-popper="none">
-                            <li><a class="dropdown-item" href="#create_trick">Créer un trick</a></li>
-                            <li><a class="dropdown-item" href="logout">Déconnexion</a></li>
+                            <li><a class="dropdown-item" href="{{ app.user.username }}/dashboard">Tableau de bord</a></li>
+                            <li><a class="dropdown-item" href="/trick/new">Créer un trick</a></li>
+                            <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
                         </ul>
                     </li><!-- #End Logged_in_user menu -->
                     {% else %}
@@ -65,7 +66,7 @@
                     <a href="/" class="nav-link"><i class="bi bi-house-fill"></i></a>
                 </li>
                 <li class="nav-item m-0 p-2">
-                    <a href="/tricks" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
+                    <a href="/#tricks_container" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
                 </li>
                 {% if (app.user) %}
                 <li class="nav-item m-0 p-2">
