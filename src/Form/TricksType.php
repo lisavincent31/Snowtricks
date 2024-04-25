@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class TricksType extends AbstractType
 {
@@ -46,7 +47,10 @@ class TricksType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
-            'allow_extra_fields' => true
+            'allow_extra_fields' => true,
+            'constraints' => [
+                new UniqueEntity(['fields' => ['name']]),
+            ],
         ]);
     }
 }

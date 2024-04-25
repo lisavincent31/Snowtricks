@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary hide-mobile">
         <div class="container d-flex justify-content-between">
             <!-- Link logo and title -->
             <div class="col-3 align-items-center">
@@ -16,12 +16,12 @@
 
             <!-- Hamburger Menu -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0 w-100 justify-content-end align-items-center">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0 w-100 justify-content-end">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/#tricks_container">Tricks</a>
+                        <a class="nav-link" aria-current="page" href="/#tricks">Tricks</a>
                     </li>
                     {% if (app.user) %}
                     <!-- Logged_in_user menu -->
@@ -31,7 +31,6 @@
                             {{ app.user.username }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="compte" data-bs-popper="none">
-                            <li><a class="dropdown-item" href="{{ app.user.username }}/dashboard">Tableau de bord</a></li>
                             <li><a class="dropdown-item" href="/trick/new">Créer un trick</a></li>
                             <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
                         </ul>
@@ -61,7 +60,7 @@
             </a>
         </div>
         <div class="container">
-            <ul class="navbar-nav me-auto w-100 flex-row justify-content-between">
+            <ul class="navbar-nav me-auto w-100 flex-row justify-content-around">
                 <li class="nav-item m-0 p-2">
                     <a href="/" class="nav-link"><i class="bi bi-house-fill"></i></a>
                 </li>
@@ -69,14 +68,29 @@
                     <a href="/#tricks_container" class="nav-link"><i class="bi bi-bookmark-fill"></i></a>
                 </li>
                 {% if (app.user) %}
-                <li class="nav-item m-0 p-2">
-                    <a href="/logout" class="nav-link"><i class="bi bi-box-arrow-left"></i></a>
-                </li>
-                {% else %}
-                <li class="nav-item m-0 p-2">
-                    <a href="/login" class="nav-link"><i class="bi bi-box-arrow-in-right"></i></a>
-                </li>
-                {% endif %}
+                    <!-- Logged_in_user menu -->
+                    <li class="nav-item dropup me-0">
+                        <a class="nav-link dropdown-toggle hidden-arrow px-3" id="compte" data-bs-toggle="dropdown" aria-expanded="true">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="compte" data-bs-popper="none">
+                            <li><a class="dropdown-item" href="/trick/new">Créer un trick</a></li>
+                            <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
+                        </ul>
+                    </li><!-- #End Logged_in_user menu -->
+                    {% else %}
+                    <!-- Guest menu -->
+                    <li class="nav-item dropup me-0">
+                        <a class="nav-link dropdown-toggle hidden-arrow px-3" id="logout" data-bs-toggle="dropdown" aria-expanded="true">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="logout" data-bs-popper="none">
+                            <li><a class="dropdown-item" href="/login">Connexion</a></li>
+                            <li><a class="dropdown-item" href="/register">S'inscrire</a></li>
+                        </ul>
+                    </li>
+                    {# End Guest Menu #}
+                    {% endif %}
             </ul>
         </div>
     </nav>

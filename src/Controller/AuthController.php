@@ -51,8 +51,6 @@ class AuthController extends AbstractController
             // validation after the form submit button
             $errors = $validator->validate($user);
             if(count($errors) > 0) {
-                $errorsString = (string) $errors;
-
                 // return the view
                 return $this->render('auth/register.html.twig', [
                     'form' => $form->createView(),
@@ -98,10 +96,10 @@ class AuthController extends AbstractController
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
+                ->from(new Address('env(ADDRESS_MAIL)', 'Snowtricks'))
                 ->to($user->getEmail())
                 ->subject('Please confirm your Email')
-                ->htmlTemplate('auth/confirmation_email.html.twig')
+                ->htmlTemplate('emails/confirmation_email.html.twig')
             );
 
             $this->addFlash('success', 'Votre compte a bien été créé.');
@@ -120,7 +118,7 @@ class AuthController extends AbstractController
 
         $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
             (new TemplatedEmail())
-            ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
+            ->from(new Address('env(ADDRESS_MAIL)', 'Snowtricks'))
             ->to($user->getEmail())
             ->subject('Please confirm your Email')
             ->htmlTemplate('emails/confirmation_email.html.twig')

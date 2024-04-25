@@ -1,3 +1,11 @@
+{% if app.user and app.user.isVerified == false %}
+    <div class="alert alert-warning alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <strong>Votre compte n'est pas activé</strong>, <a href="">renvoyer le lien d'activation</a>
+        </div>
+    </div>
+{% endif %}
 {% for message in app.flashes('success') %}
     <div class="alert alert-success alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -14,3 +22,28 @@
         </div>
     </div>
 {% endfor %}
+{% for message in app.flashes('flash-error') %}
+    <div class="alert alert-warning alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Erreur ! </strong> {{ message }}</li>
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+
+{% if errors is defined %}
+    {% if errors is not empty %}
+    <div class="alert alert-warning alert-dismissible position-fixed bottom-0" role="alert" style="z-index: 1000;  right: 10px;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert-message">
+            <ul class="list-group">
+                {% for error in errors %}
+                    <li class="list-group-item">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+{% endif %}

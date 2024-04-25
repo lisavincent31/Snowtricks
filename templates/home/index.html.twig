@@ -16,18 +16,18 @@
         </div><!-- #End Fullpage image -->
 
         <!-- Tricks Container -->
-        <div id="tricks_container" class="container bg-white pt-5">
-            <div class="row justify-content-evenly">
+        <div id="tricks" class="container bg-white pt-5 px-0">
+            <div class="row justify-content-center">
                 <!-- Trick card -->
                 {% if tricks|default(null) %}
                     {% for trick in tricks %}
-                        <div class="card mb-3 col-lg-4 p-0">
+                        <div class="card mb-3 col-lg-4 p-0 mx-1 trick">
                             {% for media in trick.getMedia %}
                                 {% if (loop.first) and (media.type == 'image') %}
                                     <img src="{{media.url}}" class="card-img-top" width="100%" height="200px" style="object-fit:cover;"/>
                                 {% endif %}
                             {% endfor %}
-                            <div class="card-body d-flex align-items-center justify-content-between">
+                            <div class="card-body row px-2 py-3">
                                 <div>
                                     <a href="/trick/{{ trick.slug }}">
                                         <h5 class="card-title">{{ trick.name }}</h5>
@@ -35,23 +35,44 @@
                                     <p class="small card-subtitle">{{ trick.category }}</p>
                                 </div>
                                 {% if (app.user) and (app.user.id == trick.author.id) %}
-                                    <div>
-                                        <a href="{{ path('app_trick_edit', {slug: trick.slug}) }}" class="btn btn-outline-success px-2 py-1">
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{ path('app_trick_edit', {slug: trick.slug}) }}" class="btn btn-outline-success px-2 py-1 me-2">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
-                                        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-outline-danger px-2 py-1">
+                                        <button type="button" class="btn btn-outline-danger px-2 py-1 me-2" data-bs-toggle="modal" data-bs-target="#trickModal-{{trick.id}}">
                                             <i class="bi bi-trash3-fill"></i>
-                                        </a>
+                                        </button>
                                     </div>
+                                    
                                 {% endif %}
-                                
                             </div>
                         </div><!-- #End Trick Card -->
+                        <!-- Modal -->
+                        <div class="modal fade" id="trickModal-{{trick.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-center">êtes-vous sûr de vouloir supprimer votre article ?</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                        <div class="d-flex justify-content-evenly">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Non, revenir en arrière.</button>
+                                            <a type="button" href="{{ path('app_trick_delete', {id: trick.id}) }}"  class="btn btn-success">Oui, supprimer !</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
+
                 {% else %}
                 <p>Pas encore de tricks en base de données.</p>
                 <p>Créez le premier ! <a href="/trick/new" class="btn btn-light">Créer un trick</a></p>
                 {% endif %}
+            </div>
+            <div class="d-flex justify-content-center my-4">
+                <button type="button" class="btn btn-outline-primary col-md-3" id="load-more-tricks">Voir plus</button>
             </div>
             <div id="blank_marg"></div>
         </div><!-- #End Tricks Container -->
@@ -61,10 +82,49 @@
             </a>
         </div>
         <div class="fixed-bottom desktop-btn" id="go-bottom">
-            <a href="#tricks_container" type="button" class="btn rounded-circle float-end btn-links">
+            <a href="#tricks" type="button" class="btn rounded-circle float-end btn-links">
                 <i class="bi bi-arrow-down-circle-fill text-primary"></i>
             </a>
         </div>
     </div><!-- #End Homepage -->
 
+{% endblock %}
+
+{% block after_scripts %}
+<script>
+$(document).ready(function() {
+    var batchSize = 10; // Nombre de tricks à charger à chaque fois
+    var visibleTricks = batchSize; // Nombre de tricks visibles initialement
+    $('#tricks .trick').hide();
+    // Fonction pour afficher les tricks supplémentaires
+    function showMoreTricks() {
+        // Augmenter le nombre de tricks visibles
+        visibleTricks += batchSize;
+
+        // Afficher les tricks jusqu'au nombre de tricks visibles
+        $('#tricks .trick').slice(0, visibleTricks).show();
+
+        // Masquer le bouton "Voir plus" s'il n'y a plus de tricks cachés
+        if ($('#tricks .trick:hidden').length === 0) {
+            $('#load-more-tricks').hide();
+        }
+    }
+
+    // Cacher tous les tricks sauf les premiers à afficher initialement
+    $('#tricks .trick').slice(0, visibleTricks).show();
+        console.log($('#tricks .trick').slice(0, visibleTricks));
+        console.log(visibleTricks);
+
+    // Gérer le clic sur le bouton "Voir plus"
+    $('#load-more-tricks').on('click', function() {
+        showMoreTricks(); // Appeler la fonction pour afficher plus de tricks
+    });
+
+    // Masquer le bouton "Voir plus" initialement s'il n'y a pas assez de tricks cachés
+    if ($('#tricks .trick').length <= visibleTricks) {
+        $('#load-more-tricks').hide();
+    }
+});
+
+</script>
 {% endblock %}

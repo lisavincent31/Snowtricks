@@ -34,6 +34,7 @@ class CommentController extends AbstractController
         $entityManager->persist($comment);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Votre commentaire a bien été posté.');
         return $this->redirectToRoute('app_home');
     }
 

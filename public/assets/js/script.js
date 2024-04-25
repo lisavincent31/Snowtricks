@@ -48,7 +48,7 @@ $(document).ready(function() {
     if($(window).width() < 640) {
         $('.list-group').removeClass('list-group-horizontal').addClass('list-group-vertical mx-auto p-0');
         $('#slideshow').find('.row').addClass('w-100 mx-auto');
-        $('#tricks_container').find('.row').addClass('w-100 mx-auto');
+        $('#tricks').find('.row').addClass('w-100 mx-auto');
         $('#medias_show').addClass('d-flex').removeClass('hide-desktop');
 
     }else{

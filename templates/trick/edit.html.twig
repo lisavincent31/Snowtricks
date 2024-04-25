@@ -22,15 +22,15 @@
     </div>
 
     {# Only on mobile devices #}
-    <div class="container d-none"> 
+    {# <div class="container d-flex justify-content-center align-items-center" id="medias_show"> 
         <button type="button" class="btn btn-outline-secondary mx-auto mt-4">See medias</button>
-    </div>
+    </div> #}
 
     {# All images and videos for this thrick #}
-    <div class="container mt-4" id="slideshow">
+    {# <div class="container mt-4">
         <div class="row border shadow rounded p-2 justify-content-start h-100">
             {% for media in trick.getMedia %}
-                {% if media.id!= feature.id %}
+                {% if media.id != feature.id %}
                     <div class="col d-flex flex-column">
                         {% if media.type == "image" %}
                         <img src="{{media.url}}" class="img-fluid" alt="..." height="100px">
@@ -38,19 +38,53 @@
                         <iframe width="180" height="100" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
                         {% endif %}
 
-                        <div class="mt-2 mode_edit">
-                            <button type="button" class="btn btn-outline-success px-2 py-1 btn-modal" data-url="{{ media.url }}" data-type="{{ media.type }}" data-id="{{ media.id }}">
-                                <i class="bi bi-pencil-fill"></i>
-                            </button>
-                            <a href="/trick/{{ trick.slug }}/delete/media/{{ media.id }}" class="btn btn-outline-danger px-2 py-1">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a>
-                        </div>
+                        
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
+    </div> #}
+
+    <div class="container mt-4" id="slideshow">
+        <div class="owl-carousel owl-theme">
+            {% for media in trick.getMedia %}
+                {% if media.id != feature.id %}
+                <div class="row">
+                    <div class="media-modal" data-bs-toggle="modal" data-bs-target="#mediaModal-{{media.id}}">
+                    {% if media.type == "image" %}
+                        <img src="/assets/medias/tricks/{{media.name}}" class="img-fluid" alt="..." height="100px">
+                    {% else %}
+                        <iframe width="180" height="100" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                    {% endif %}
+                    </div>
+                    <div class="mt-2 mode_edit">
+                        <button type="button" class="btn btn-outline-success px-2 py-1 btn-modal" data-url="{{ media.url }}" data-type="{{ media.type }}" data-id="{{ media.id }}">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <a href="/trick/{{ trick.slug }}/delete/media/{{ media.id }}" class="btn btn-outline-danger px-2 py-1">
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
+
+    {# modal structure #}
+    {% for media in trick.getMedia %}
+        <div class="modal fade" id="mediaModal-{{media.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    {% if media.type == "image" %}
+                        <img src="/assets/medias/tricks/{{media.name}}" class="img-fluid" alt="..." height="100%">
+                    {% else %}
+                        <iframe width="100%" height="100%" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
     {# All informations #}
     {{ form_start(form, {'method': 'PUT'}) }}
@@ -122,7 +156,7 @@
                         </div>
                         <div class="col-12 mt-3" id="new_media"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-end">Save changes</button>
+                    <button type="submit" class="btn btn-primary float-end mt-5 mb-3">Sauvegarder</button>
                 </div>
             </form>
         </div>
@@ -168,6 +202,9 @@
                 $('#modalMedia').modal('show');
             });
         });
+
+        // Owl Carousel
+        $('.owl-carousel').owlCarousel();
 
     </script>
 {% endblock %}

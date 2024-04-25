@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 // Constraints
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class UsersType extends AbstractType
 {
@@ -22,7 +23,7 @@ class UsersType extends AbstractType
             // username is unique and required
             ->add('username', TextType::class, [
                 'label' => 'Pseudo',
-                'required' => true
+                'required' => true,
             ])
             // add a minimum lenght
             ->add('password', PasswordType::class, [
@@ -56,6 +57,12 @@ class UsersType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Users::class,
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => ['username', 'email'],
+                    
+                ])
+            ],
         ]);
     }
 }

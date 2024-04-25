@@ -5,12 +5,12 @@ body {
     box-sizing: border-box;
 }
 
-#blank_marg {
-    display: none;
+*/:root,[data-mdb-theme=light] {
+    --mdb-primary-rgb: rgb(26, 26, 26);
 }
 
-.margin-desktop {
-    height: 100px;
+.btn {
+    --mdb-btn-padding-x : 0.725rem!important;
 }
 
 .btn-links {
@@ -104,6 +104,29 @@ img.avatar {
     object-fit: cover;
 }
 
+.media-modal:hover {
+    opacity: 0.7;
+    transform: scale(0.97);
+}
+
+/* Add Animation */
+#mediaModal  .modal-content {  
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+  
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+  
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
 #comments img {
     width: 50px!important;
     height: 50px!important;
@@ -134,6 +157,10 @@ img.avatar {
     display: block;
 }
 
+.nav-item {
+    align-content: center;
+}
+
 @media screen and (min-width: 200px) and (max-width: 640px) {
     /* General Styles */
     #blank_marg {
@@ -144,7 +171,7 @@ img.avatar {
         height: 0!important;
     }
     .hide-mobile {
-        display: none;
+        display: none!important;
     }
     header .navbar.fixed-top, footer, .desktop-btn {
         display: none!important;
@@ -174,6 +201,10 @@ img.avatar {
         height: calc(100vh - 132px);
     }
 
+    .bg-img .caption { 
+        top: 10%;
+    }
+
     #tricks_container {
         height: 100vh;
         padding-bottom: 200px;
@@ -190,6 +221,14 @@ img.avatar {
     #comments figure p{
         font-size: 14px;
         text-align: justify;
+    }
+
+    .dropdown-toggle i, .nav-link {
+        font-size: 24px!important;
+    }
+
+    .dropup-center, .dropup {
+        align-content: center;
     }
 
 }

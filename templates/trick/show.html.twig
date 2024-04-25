@@ -30,10 +30,10 @@
 
     {# All images and videos for this thrick #}
     <div class="container mt-4 hide-mobile" id="slideshow">
-        <div class="row border shadow rounded p-2 justify-content-start h-100">
+        <div class="owl-carousel owl-theme">
             {% for media in trick.getMedia %}
                 {% if media.id != feature.id %}
-                    <div class="col d-flex flex-column">
+                    <div class="media-modal" data-bs-toggle="modal" data-bs-target="#mediaModal-{{media.id}}">
                     {% if media.type == "image" %}
                         <img src="/assets/medias/tricks/{{media.name}}" class="img-fluid" alt="..." height="100px">
                     {% else %}
@@ -44,6 +44,21 @@
             {% endfor %}
         </div>
     </div>
+
+    {# modal structure #}
+    {% for media in trick.getMedia %}
+        <div class="modal fade" id="mediaModal-{{media.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    {% if media.type == "image" %}
+                        <img src="/assets/medias/tricks/{{media.name}}" class="img-fluid" alt="..." height="100%">
+                    {% else %}
+                        <iframe width="100%" height="100%" src="{{media.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="img-fluid"></iframe>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
     {# All informations #}
     <div class="container my-4" id="informations">
@@ -127,44 +142,77 @@
 
 {% block after_scripts %}
 <script>
-    $(document).ready(function() {
-        // Toggle Button to see and hide medias for mobile device
-        const btn_show_medias = $('#medias_show');
+$(document).ready(function() {
+    // Owl Carousel
+    $('.owl-carousel').owlCarousel();
 
-        $(btn_show_medias).on('click', function() {
-            $('#slideshow').toggleClass("hide-mobile");
-            if($(this).find('button').text() == 'Hide medias') {
-                $(this).find('button').text('See medias');
-            }else{
-                $(this).find('button').text('Hide medias');
-            }
-        });
-        /* Limit 4 comments */
-        limitComments();
+    // Toggle Button to see and hide medias for mobile device
+    const btn_show_medias = $('#medias_show');
 
-        // Load more comments
-        $('#load-more-comments').click(function() {
-            var hidden_comments = $('#comments').find('.comment.d-none');
-            if($(this).text() == 'Voir plus') {
-                $(hidden_comments).removeClass('d-none').addClass('d-flex');
-                $(this).text('Voir moins');
-            }else{
-                limitComments();
-                $(this).text('Voir plus');
-            }
-        });
+    $(btn_show_medias).on('click', function() {
+        $('#slideshow').toggleClass("hide-mobile");
+        if ($(this).find('button').text() == 'Hide medias') {
+            $(this).find('button').text('See medias');
+        } else {
+            $(this).find('button').text('Hide medias');
+        }
     });
 
-    function limitComments()
-    {
-        const comments = $('#comments .comment');
-        var index = 1;
-        $.each(comments, function() {
-            if(index > 4) {
-                $(this).addClass('d-none').removeClass('d-flex');
-            }
-            index++;
-        });
+    var batchSize = 10; // Nombre de comments à charger à chaque fois
+    var visibleComments = batchSize; // Nombre de comments visibles initialement
+
+    // Cacher tous les tricks sauf les premiers à afficher initialement
+    $('#tricks .trick').hide();
+
+    // Fonction pour afficher les tricks supplémentaires
+    function showMoreTricks() {
+        // Augmenter le nombre de tricks visibles
+        visibleTricks += batchSize;
+
+        // Afficher les tricks jusqu'au nombre de tricks visibles
+        $('#tricks .trick').slice(0, visibleTricks).show();
+
+        // Masquer le bouton "Voir plus" s'il n'y a plus de tricks cachés
+        if ($('#tricks .trick:hidden').length === 0) {
+            $('#load-more-tricks').hide();
+        }
     }
+
+    // Gérer le clic sur le bouton "Voir plus" pour les tricks
+    $('#load-more-tricks').on('click', function() {
+        showMoreTricks(); // Appeler la fonction pour afficher plus de tricks
+    });
+
+    // Cacher tous les comments sauf les premiers à afficher initialement
+    $('#comments .comment').hide();
+
+    // Fonction pour afficher les comments supplémentaires
+    function showMoreComments() {
+        // Augmenter le nombre de comments visibles
+        visibleComments += batchSize;
+
+        // Afficher les comments jusqu'au nombre de comments visibles
+        $('#comments .comment').slice(0, visibleComments).show();
+
+        // Masquer le bouton "Voir plus" s'il n'y a plus de comments cachés
+        if ($('#comments .comment:hidden').length === 0) {
+            $('#load-more-comments').hide();
+        }
+    }
+
+    // Gérer le clic sur le bouton "Voir plus" pour les comments
+    $('#load-more-comments').on('click', function() {
+        showMoreComments(); // Appeler la fonction pour afficher plus de comments
+    });
+
+    // Masquer le bouton "Voir plus" initialement s'il n'y a pas assez de tricks cachés
+    if ($('#comments .comment').length <= visibleComments) {
+        $('#load-more-comments').hide();
+    }
+});
+
+
+   
+
 </script>
 {% endblock %}

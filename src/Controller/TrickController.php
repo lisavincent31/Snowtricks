@@ -35,7 +35,15 @@ class TrickController extends AbstractController
         // create the form
         $form = $this->createForm(TricksType::class, $trick);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted()) {
+            $errors = $validator->validate($user);
+            if(count($errors) > 0) {
+                // return the view
+                return $this->render('trick/index.html.twig', [
+                    'form' => $form->createView(),
+                    'errors' => $errors
+                ]);
+            }
             // get all images
             $images = $request->files->get('images');
             if($images) {
@@ -216,7 +224,11 @@ class TrickController extends AbstractController
     public function delete(int $id, EntityManagerInterface $entityManager, Request $request)
     {
         $trick = $entityManager->getRepository(Trick::class)->find($id);
-
+        $comments = $trick->getComments();
+        foreach($comments as $comment) {
+            $trick->removeComment($comment);
+            $entityManager->remove($comment);
+        }
         $entityManager->remove($trick);
         $entityManager->flush();
 
