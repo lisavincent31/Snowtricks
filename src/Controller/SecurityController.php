@@ -61,7 +61,7 @@ class SecurityController extends AbstractController
         }
         $this->emailVerifier->sendEmailResetPassword('app_reset_password', $user,
             (new TemplatedEmail())
-            ->from(new Address('lisa.vincent31150@gmail.com', 'Snowtricks'))
+            ->from(new Address($_ENV['ADDRESS_MAIL'], 'Snowtricks'))
             ->to($user->getEmail())
             ->subject('Modification de votre mot de passe')
             ->htmlTemplate('emails/email_password.html.twig')

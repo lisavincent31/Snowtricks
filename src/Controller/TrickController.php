@@ -27,7 +27,10 @@ class TrickController extends AbstractController
 {
 
     #[Route('/trick/new', name: 'app_trick')]
-    public function create(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function create(Request $request, 
+                            EntityManagerInterface $entityManager, 
+                            SluggerInterface $slugger,
+                            ValidatorInterface $validator): Response
     {
         $date = new DateTimeImmutable('now');
 
@@ -36,7 +39,7 @@ class TrickController extends AbstractController
         $form = $this->createForm(TricksType::class, $trick);
         $form->handleRequest($request);
         if($form->isSubmitted()) {
-            $errors = $validator->validate($user);
+            $errors = $validator->validate($trick);
             if(count($errors) > 0) {
                 // return the view
                 return $this->render('trick/index.html.twig', [

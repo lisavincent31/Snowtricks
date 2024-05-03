@@ -60,6 +60,7 @@ class UsersType extends AbstractType
             'constraints' => [
                 new UniqueEntity([
                     'fields' => ['username', 'email'],
+                    'message' => 'Cet utilisateur existe déjà.'
                     
                 ])
             ],

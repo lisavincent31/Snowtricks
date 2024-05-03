@@ -16,6 +16,7 @@ use App\Form\UsersType;
 use App\Entity\Users;
 use App\Repository\UsersRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Repository\TrickRepository;
 
 use App\Security\EmailVerifier;
 use Symfony\Component\Mime\Address;
@@ -96,7 +97,7 @@ class AuthController extends AbstractController
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                ->from(new Address('env(ADDRESS_MAIL)', 'Snowtricks'))
+                ->from(new Address($_ENV['ADDRESS_MAIL'], 'Snowtricks'))
                 ->to($user->getEmail())
                 ->subject('Please confirm your Email')
                 ->htmlTemplate('emails/confirmation_email.html.twig')
@@ -112,17 +113,24 @@ class AuthController extends AbstractController
     }
 
     #[Route('/resend_email/{id}', name: 'app_resend_email')]
-    public function resendEmail(int $id): Response
+    public function resendEmail(int $id,TrickRepository $trickRepository): Response
     {
         $user = $this->userRepository->find($id);
 
         $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
             (new TemplatedEmail())
-            ->from(new Address('env(ADDRESS_MAIL)', 'Snowtricks'))
+            ->from(new Address($_ENV['ADDRESS_MAIL'], 'Snowtricks'))
             ->to($user->getEmail())
             ->subject('Please confirm your Email')
             ->htmlTemplate('emails/confirmation_email.html.twig')
         );
+        $this->addFlash('success', 'Email de vérification renvoyé avec succès.');
+
+        $tricks = $trickRepository->findAll();
+        return $this->render('home/index.html.twig', [
+            'title' => "Accueil",
+            'tricks' => $tricks
+        ]);
     }
 
     #[Route('/verify_email', name: 'app_verify_email')]

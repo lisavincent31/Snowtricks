@@ -2,7 +2,7 @@
     <div class="alert alert-warning alert-dismissible position-fixed bottom-0 float-end" role="alert" style="z-index: 1000">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <div class="alert-message">
-            <strong>Votre compte n'est pas activé</strong>, <a href="">renvoyer le lien d'activation</a>
+            <strong>Votre compte n'est pas activé</strong>, <a href="{{ path('app_resend_email', {id: app.user.id}) }}">renvoyer le lien d'activation</a>
         </div>
     </div>
 {% endif %}
