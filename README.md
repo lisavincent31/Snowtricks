@@ -22,12 +22,14 @@
 
  - Pour créer la base de données j'ai utilisé Doctrine. Une fois le fichier **.env** remplit vous pouvez ouvrir votre terminal de commande et taper : 
  ```bash
+ composer require symfony/runtime
  php bin/console doctrine:database:create
  php bin/console doctrine:migrations:migrate
  ```
  - Pour peupler la base de données, vous trouverez un fichier **database.sql** à la racine du dossier. Vous pouvez tout simplement copier/coller le texte dans votre éditeur sql.
+ **Attention : Pensez à bien modifier le nom de la base de données dans les deux premières lignes par le nom que vous lui avez donné.**
 
-  - Pour intercepter les emails envoyés depuis le site, j'utilise MailHog. Vous trouverez le fichier **MailHog.exe** à la racine du dossier. Il vous suffit de cliquer dessus, cela ouvrira un terminal de commande pour lancer l'application. Vous pourrez ensuite aller sur *localhost/8025* pour voir tous les emails envoyés depuis le site SnowTricks.
+  - Pour intercepter les emails envoyés depuis le site, j'utilise MailHog. Vous téléchargez l'application [en cliquant ici](https://github.com/mailhog/MailHog/releases/v1.0.0). Il vous suffit de choisir la version qui convient le mieux à votre système d'exploitation, télécharger le fichier puis cliquer dessus. Cela ouvrira un terminal de commande pour lancer l'application. Vous pourrez ensuite aller sur *localhost/8025* pour voir tous les emails envoyés depuis le site SnowTricks.
  
 Maintenant, dans votre terminal de commande vous pouvez lancer le serveur symfony :
 ```bash

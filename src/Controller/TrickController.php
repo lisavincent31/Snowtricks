@@ -261,7 +261,7 @@ class TrickController extends AbstractController
             $trick->addMedium($media);
 
         }else{
-            $media = $entityManager->getRepository(Meia::class)->find($request->get('id'));
+            $media = $entityManager->getRepository(Media::class)->find($request->get('id'));
         }    
         // place the media in the folder
         $image->move(
