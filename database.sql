@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS snowtricks;
 
 USE snowtricks;
 
-INSERT INTO users (id, username, roles, email, password, is_verified, avatar, created_at) VALUES 
+INSERT INTO users (id, username, roles, email, password, is_verified, avatar) VALUES 
     (1, 'Admin', '["ROLE_USER", "ROLE_ADMIN"]', 'admin@mailinator.com', 'admin1234', 0, 'default-profil1.jpg'),
     (2, 'emily_grld', '["ROLE_USER"]', 'emily_grld@mailinator.com', 'emily_grld', 0, 'default-profil2.jpg'),
     (3, 'john_prorider', '["ROLE_USER"]', 'john_prorider@mailinator.com', 'john_prorider', 0, 'default-profil3.jpg'),
