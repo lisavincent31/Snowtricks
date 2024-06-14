@@ -37,12 +37,4 @@ class CommentController extends AbstractController
         $this->addFlash('success', 'Votre commentaire a bien été posté.');
         return $this->redirectToRoute('app_home');
     }
-
-    #[Route('/comments/load-more', name:"load_more_comments", methods:"POST")]
-    public function loadMoreComments(Request $request): JsonResponse
-    {
-        dd($request);
-
-        return $this->json($comments);
-    }
 }

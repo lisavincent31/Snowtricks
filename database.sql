@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS snowtricks;
+CREATE DATABASE IF NOT EXISTS snowtricks_exam;
 
-USE snowtricks;
+USE snowtricks_exam;
 
 INSERT INTO users (id, username, roles, email, password, is_verified, avatar) VALUES 
     (1, 'Admin', '["ROLE_USER", "ROLE_ADMIN"]', 'admin@mailinator.com', 'admin1234', 0, 'default-profil1.jpg'),
