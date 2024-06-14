@@ -8,7 +8,7 @@
 
  - Ouvrez votre terminal de commande et clonez le repository du projet en tapant : 
  ```bash
- git clone https://github.com/lisavincent31/Vincent_Lisa_1_repository_git_012024.git
+ git clone https://github.com/lisavincent31/Snowtricks.git
  ```
  - A la racine du projet, vous trouverez le fichier .env. Modifiez le pour créer la database snowtricks
  ```bash
